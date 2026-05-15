@@ -1,361 +1,351 @@
 @extends('layouts.app')
 
 @section('content')
-<!-- Hero Background Wrapper -->
-<div class="relative w-full min-h-screen bg-cover bg-center"
-    style="background-image: url('{{ asset('raiyan-zakaria-Y43aG83fYMA-unsplash.jpg') }}');">
-    <!-- Dark Overlay -->
-    <div class="absolute inset-0 bg-black/70"></div>
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&display=swap');
 
-    <!-- Main Content Container with Split Layout -->
-    <div class="relative z-10 w-full min-h-screen flex items-center justify-center p-6 lg:px-12 lg:pt-24 pb-12">
-        <!-- Split Grid Layout -->
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-8 w-full max-w-7xl items-center mt-16 lg:mt-0">
+    /* Flat Design Base Override */
+    body {
+        font-family: 'Outfit', sans-serif;
+        background-color: #ffffff !important; 
+        color: #111827; /* Gray 900 */
+        margin: 0;
+        padding: 0;
+        background-image: none !important; /* Remove any previous body texture */
+    }
 
-            <!-- Hero Section (Left) -->
-            <div class="text-left w-full max-w-2xl px-4 lg:px-0">
-                <h1
-                    class="text-4xl md:text-5xl lg:text-5xl font-extrabold text-white leading-[1.1] mb-4 tracking-tight">
-                    BUMDes <span class="text-blue-300">GO</span><br />DIGITAL SOLUSI
+    /* Core Flat Tokens */
+    .flat-bg-primary { background-color: #2563EB; } /* blue-600 */
+    .flat-bg-emerald { background-color: #10B981; } /* emerald-500 */
+    .flat-bg-amber { background-color: #F59E0B; } /* amber-500 */
+    .flat-bg-muted { background-color: #F3F4F6; } /* gray-100 */
+    .flat-bg-dark { background-color: #1F2937; } /* gray-800 */
+    
+    .flat-text-dark { color: #111827; }
+    .flat-text-light { color: #FFFFFF; }
+    .flat-text-muted { color: #6B7280; } /* gray-500 */
+
+    /* Flat Components */
+    .flat-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 1rem 2rem;
+        font-weight: 800;
+        font-size: 1.125rem;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        border-radius: 0.375rem; /* rounded-md */
+        transition: all 200ms ease;
+        box-shadow: none !important;
+    }
+
+    .flat-btn-primary {
+        background-color: #F59E0B; /* Amber */
+        color: #ffffff;
+    }
+    .flat-btn-primary:hover {
+        background-color: #D97706; /* amber-600 */
+        transform: scale(1.05);
+    }
+
+    .flat-btn-outline {
+        background-color: transparent;
+        color: #ffffff;
+        border: 4px solid #ffffff;
+    }
+    .flat-btn-outline:hover {
+        background-color: #ffffff;
+        color: #2563EB; /* match bg for inversion */
+        transform: scale(1.05);
+    }
+
+    .flat-btn-dark {
+        background-color: #1F2937;
+        color: #ffffff;
+    }
+    .flat-btn-dark:hover {
+        background-color: #111827;
+        transform: scale(1.05);
+    }
+
+    .flat-card {
+        background-color: #ffffff;
+        border-radius: 0.5rem; /* rounded-lg */
+        padding: 2rem;
+        transition: transform 200ms ease;
+        box-shadow: none !important;
+        border: none !important;
+    }
+    .flat-card:hover {
+        transform: scale(1.02);
+    }
+
+    /* Remove ANY trace of shadow globally in this page scope */
+    * { box-shadow: none !important; }
+</style>
+
+<!-- Top Layout Container -->
+<div class="relative w-full -mt-8 pt-8 bg-white z-10">
+
+    <!-- HERO SECTION: 50/50 Split Poster -->
+    <div class="w-full min-h-[90vh] flex flex-col lg:flex-row">
+        <!-- Left Side: Solid Blue Action Block -->
+        <div class="w-full lg:w-1/2 flat-bg-primary relative overflow-hidden flex items-center justify-center p-8 lg:p-16 min-h-[50vh] lg:min-h-full">
+            <!-- Decorative Flat Shapes -->
+            <div class="absolute -top-24 -left-24 w-80 h-80 rounded-full bg-white/10 pointer-events-none"></div>
+            <div class="absolute -bottom-16 -right-16 w-64 h-64 bg-white/10 rotate-45 pointer-events-none"></div>
+            <div class="absolute top-1/4 right-10 w-12 h-12 rounded-full border-4 border-white/20 pointer-events-none"></div>
+            
+            <div class="relative z-10 w-full max-w-xl">
+                <!-- Eyebrow Tag -->
+                <div class="inline-block px-4 py-1.5 flat-bg-amber rounded-md text-white font-black tracking-widest uppercase text-sm mb-6">
+                    Sistem Tata Kelola
+                </div>
+
+                <h1 class="text-6xl md:text-7xl lg:text-[5.5rem] font-black flat-text-light tracking-tighter leading-[0.95] mb-6 drop-shadow-none">
+                    BUMDes<br/>GO DIGITAL
                 </h1>
 
-                <h3 class="text-xl md:text-2xl text-white/90 font-medium mb-6">
-                    Desa Sinulasi
-                </h3>
-
-                <p class="text-base md:text-lg text-white/80 mb-10 max-w-md leading-relaxed">
-                    Aplikasi akuntansi cerdas dan transparan untuk tata kelola BUMDes yang lebih modern dan
-                    akuntabel.
+                <p class="text-xl lg:text-2xl font-medium text-white/90 leading-snug mb-12 max-w-lg">
+                    Revolusi akuntansi desa. Transparan, terpusat, dan dibangun untuk efisiensi instan.
                 </p>
 
-                <div class="flex flex-col sm:flex-row items-start lg:items-center gap-4">
-                    <a href="#"
-                        class="w-full sm:w-auto text-center px-8 py-3.5 bg-white text-[#111827] font-bold rounded-lg shadow-lg hover:bg-gray-100 transition-all focus:ring-4 focus:ring-white/50 text-sm">
-                        Lihat Katalog Produk
-                    </a>
-                    <a href="#"
-                        class="w-full sm:w-auto text-center px-8 py-3.5 bg-white/10 text-white font-semibold rounded-lg shadow-lg border border-transparent hover:bg-blue-300 transition-all focus:ring-4 focus:ring-[#2A2359]/50 text-sm">
-                        Lihat Profil Kami
-                    </a>
+                <div class="flex flex-col sm:flex-row gap-4">
+                    <a href="#" class="flat-btn flat-btn-primary">Katalog Produk</a>
+                    <a href="#" class="flat-btn flat-btn-outline">Info Grafik</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Side: The Requested Image (Edge to Edge, NO overlay) -->
+        <div class="w-full lg:w-1/2 min-h-[40vh] lg:min-h-full bg-gray-200">
+            <img class="w-full h-full object-cover object-center block" 
+                 src="{{ asset('raiyan-zakaria-Y43aG83fYMA-unsplash.jpg') }}" 
+                 alt="BUMDes Operations Image">
+        </div>
+    </div>
+
+
+    <!-- STRUKTUR PENGURUS SECTION -->
+    <div class="w-full py-24 flat-bg-muted">
+        <div class="mx-auto max-w-7xl px-6 lg:px-12">
+            
+            <div class="mb-16">
+                <h2 class="text-5xl md:text-7xl font-black flat-text-dark tracking-tighter uppercase leading-none mb-4">
+                    Struktur<br/>Pengurus
+                </h2>
+                <div class="w-32 h-4 flat-bg-primary"></div> <!-- Bold geometric underline -->
+                <p class="mt-6 text-xl flat-text-muted max-w-2xl font-medium">Tim pengelola inti dengan determinasi tingkat tinggi untuk kemajuan kolektif.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Direktur -->
+                <div class="flat-card group cursor-pointer border-4 border-transparent hover:border-[#1F2937] transition-all bg-white relative">
+                    <!-- Deco dot -->
+                    <div class="absolute top-4 right-4 w-3 h-3 rounded-full bg-[#1F2937]"></div>
+                    
+                    <div class="w-full flex flex-col mb-8 mt-4">
+                        <img class="w-24 h-24 rounded-full object-cover border-4 border-[#2563EB] mb-6"
+                            src="https://ui-avatars.com/api/?name=Budi+Santoso&size=200&background=1F2937&color=fff&font-size=0.33"
+                            alt="Budi Santoso">
+                        <h3 class="text-3xl font-black flat-text-dark tracking-tighter mb-2">Budi Santoso</h3>
+                        <div class="inline-block self-start px-3 py-1 bg-[#1F2937] text-white rounded font-bold text-xs tracking-widest uppercase mb-4">
+                            Direktur
+                        </div>
+                    </div>
+                    <p class="text-[#6B7280] font-medium leading-relaxed">Penyusun strategi makro operasional BUMDes.</p>
+                </div>
+
+                <!-- Sekretaris -->
+                <div class="flat-card group cursor-pointer border-4 border-transparent hover:border-[#1F2937] transition-all bg-white relative">
+                    <div class="absolute top-4 right-4 w-3 h-3 rounded-full bg-[#1F2937]"></div>
+                    
+                    <div class="w-full flex flex-col mb-8 mt-4">
+                        <img class="w-24 h-24 rounded-full object-cover border-4 border-[#10B981] mb-6"
+                            src="https://ui-avatars.com/api/?name=Siti+Aminah&size=200&background=1F2937&color=fff&font-size=0.33"
+                            alt="Siti Aminah">
+                        <h3 class="text-3xl font-black flat-text-dark tracking-tighter mb-2">Siti Aminah</h3>
+                        <div class="inline-block self-start px-3 py-1 bg-[#1F2937] text-white rounded font-bold text-xs tracking-widest uppercase mb-4">
+                            Sekretaris
+                        </div>
+                    </div>
+                    <p class="text-[#6B7280] font-medium leading-relaxed">Pengelola sistematisasi arsip dan komunikasi intra-desa.</p>
+                </div>
+
+                <!-- Bendahara -->
+                <div class="flat-card group cursor-pointer border-4 border-transparent hover:border-[#1F2937] transition-all bg-white relative">
+                    <div class="absolute top-4 right-4 w-3 h-3 rounded-full bg-[#1F2937]"></div>
+                    
+                    <div class="w-full flex flex-col mb-8 mt-4">
+                        <img class="w-24 h-24 rounded-full object-cover border-4 border-[#F59E0B] mb-6"
+                            src="https://ui-avatars.com/api/?name=Ahmad+Fauzi&size=200&background=1F2937&color=fff&font-size=0.33"
+                            alt="Ahmad Fauzi">
+                        <h3 class="text-3xl font-black flat-text-dark tracking-tighter mb-2">Ahmad Fauzi</h3>
+                        <div class="inline-block self-start px-3 py-1 bg-[#1F2937] text-white rounded font-bold text-xs tracking-widest uppercase mb-4">
+                            Bendahara
+                        </div>
+                    </div>
+                    <p class="text-[#6B7280] font-medium leading-relaxed">Auditor akuntansi lapangan dan stabilitas kas lokal.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- GALERI KEGIATAN SECTION (Solid Emerald Color Block) -->
+    <div class="w-full py-24 flat-bg-emerald relative overflow-hidden">
+        <!-- Decoration -->
+        <div class="absolute right-0 top-0 w-[40rem] h-[40rem] bg-[#059669]/20 rounded-full translate-x-1/3 -translate-y-1/3 pointer-events-none"></div>
+
+        <div class="mx-auto max-w-7xl px-6 lg:px-12 relative z-10">
+            <div class="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-6">
+                <div>
+                    <h2 class="text-5xl md:text-7xl font-black flat-text-light tracking-tighter uppercase leading-none mb-4">
+                        Arsip<br/>Digital
+                    </h2>
+                    <div class="w-32 h-4 flat-bg-dark"></div>
+                </div>
+                <p class="text-xl text-white font-semibold max-w-sm">
+                    Kompilasi dokumentasi kemajuan desa secara riil.
+                </p>
+            </div>
+
+            <!-- Hard grid, no gaps, flat block images -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Gallery Item 1 -->
+                <div class="bg-white p-2 rounded-xl cursor-pointer group hover:scale-[1.02] hover:-translate-y-2 transition-all border-4 border-transparent hover:border-[#1F2937]">
+                    <div class="w-full aspect-[4/3] overflow-hidden rounded-lg bg-gray-200">
+                        <img src="https://picsum.photos/800/600?random=1" alt="Rapat Desa" class="w-full h-full object-cover">
+                    </div>
+                    <div class="pt-5 pb-3 px-3 flex justify-between items-center">
+                        <h3 class="font-black text-[#111827] text-xl uppercase tracking-tighter">Rapat Desa</h3>
+                        <span class="font-bold text-white bg-[#10B981] px-2 py-0.5 rounded text-sm">15.01</span>
+                    </div>
+                </div>
+
+                <!-- Gallery Item 2 -->
+                <div class="bg-white p-2 rounded-xl cursor-pointer group hover:scale-[1.02] hover:-translate-y-2 transition-all border-4 border-transparent hover:border-[#1F2937]">
+                    <div class="w-full aspect-[4/3] overflow-hidden rounded-lg bg-gray-200">
+                        <img src="https://picsum.photos/800/600?random=2" alt="Digitalisasi" class="w-full h-full object-cover">
+                    </div>
+                    <div class="pt-5 pb-3 px-3 flex justify-between items-center">
+                        <h3 class="font-black text-[#111827] text-xl uppercase tracking-tighter">Penyuluhan</h3>
+                        <span class="font-bold text-white bg-[#10B981] px-2 py-0.5 rounded text-sm">03.02</span>
+                    </div>
+                </div>
+
+                <!-- Gallery Item 3 -->
+                <div class="bg-white p-2 rounded-xl cursor-pointer group hover:scale-[1.02] hover:-translate-y-2 transition-all border-4 border-transparent hover:border-[#1F2937]">
+                    <div class="w-full aspect-[4/3] overflow-hidden rounded-lg bg-gray-200">
+                        <img src="https://picsum.photos/800/600?random=3" alt="Pasar Desa" class="w-full h-full object-cover">
+                    </div>
+                    <div class="pt-5 pb-3 px-3 flex justify-between items-center">
+                        <h3 class="font-black text-[#111827] text-xl uppercase tracking-tighter">Bazar Lokal</h3>
+                        <span class="font-bold text-white bg-[#10B981] px-2 py-0.5 rounded text-sm">22.02</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Emerald Section Button -->
+            <div class="mt-16 text-center">
+                <a href="#" class="flat-btn border-4 border-white text-white hover:bg-white hover:text-[#10B981] bg-transparent">
+                    Buka Arsip Lengkap
+                </a>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- KATALOG PRODUK SECTION -->
+    <div class="w-full py-24 bg-white relative">
+        <div class="mx-auto max-w-7xl px-6 lg:px-12">
+            
+            <div class="flex flex-col mb-16 items-start md:items-center md:text-center">
+                <div class="inline-block px-4 py-1.5 bg-[#2563EB] rounded font-black tracking-widest uppercase text-sm mb-6 text-white">
+                    Indeks Komoditas
+                </div>
+                <h2 class="text-5xl md:text-7xl font-black flat-text-dark tracking-tighter uppercase leading-none mb-6">
+                    Katalog Utama
+                </h2>
+                <div class="w-32 h-4 flat-bg-amber"></div>
+            </div>
+
+            <!-- Cards -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                <!-- Produk 1 -->
+                <div class="bg-[#F3F4F6] p-4 rounded-2xl flex flex-col group cursor-pointer hover:bg-[#E5E7EB] transition-colors border-4 border-transparent hover:border-[#2563EB]">
+                    <!-- Image Area -->
+                    <div class="w-full aspect-[4/3] rounded-xl bg-gray-300 overflow-hidden relative mb-6">
+                        <img src="https://picsum.photos/400/300?random=11" alt="Bambu" class="w-full h-full object-cover">
+                        <div class="absolute top-3 right-3 bg-[#2563EB] text-white px-3 py-1 font-bold text-xs uppercase tracking-wider rounded">Baru</div>
+                    </div>
+                    <div class="px-2 flex flex-col flex-grow">
+                        <h3 class="text-2xl font-black flat-text-dark uppercase tracking-tighter mb-2 leading-tight">Kerajinan Bambu</h3>
+                        <p class="text-[#6B7280] font-medium text-sm leading-relaxed mb-6 flex-grow">Struktur anyaman fungsional buatan lokalisasi desa.</p>
+                        
+                        <div class="w-full pt-4 border-t-2 border-gray-300 flex flex-col items-start gap-4">
+                            <span class="text-3xl font-black text-[#111827] tracking-tighter">Rp45K</span>
+                            <a href="#" class="w-full text-center flat-btn bg-[#2563EB] text-white border-2 border-transparent hover:bg-white hover:border-[#2563EB] hover:text-[#2563EB]">Akses Info</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Produk 2 -->
+                <div class="bg-[#F3F4F6] p-4 rounded-2xl flex flex-col group cursor-pointer hover:bg-[#E5E7EB] transition-colors border-4 border-transparent hover:border-[#2563EB]">
+                    <div class="w-full aspect-[4/3] rounded-xl bg-gray-300 overflow-hidden relative mb-6">
+                        <img src="https://picsum.photos/400/300?random=12" alt="Kopi" class="w-full h-full object-cover">
+                    </div>
+                    <div class="px-2 flex flex-col flex-grow">
+                        <h3 class="text-2xl font-black flat-text-dark uppercase tracking-tighter mb-2 leading-tight">Arabika Roast</h3>
+                        <p class="text-[#6B7280] font-medium text-sm leading-relaxed mb-6 flex-grow">Ekstraksi biji kopi hitam dataran tinggi murni.</p>
+                        
+                        <div class="w-full pt-4 border-t-2 border-gray-300 flex flex-col items-start gap-4">
+                            <span class="text-3xl font-black text-[#111827] tracking-tighter">Rp65K</span>
+                            <a href="#" class="w-full text-center flat-btn bg-[#2563EB] text-white border-2 border-transparent hover:bg-white hover:border-[#2563EB] hover:text-[#2563EB]">Akses Info</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Produk 3 -->
+                <div class="bg-[#F3F4F6] p-4 rounded-2xl flex flex-col group cursor-pointer hover:bg-[#E5E7EB] transition-colors border-4 border-transparent hover:border-[#F59E0B]">
+                    <div class="w-full aspect-[4/3] rounded-xl bg-gray-300 overflow-hidden relative mb-6">
+                        <img src="https://picsum.photos/400/300?random=13" alt="Madu" class="w-full h-full object-cover">
+                        <div class="absolute top-3 right-3 bg-[#EF4444] text-white px-3 py-1 font-bold text-xs uppercase tracking-wider rounded">Laris</div>
+                    </div>
+                    <div class="px-2 flex flex-col flex-grow">
+                        <h3 class="text-2xl font-black flat-text-dark uppercase tracking-tighter mb-2 leading-tight">Madu Hutan</h3>
+                        <p class="text-[#6B7280] font-medium text-sm leading-relaxed mb-6 flex-grow">Komposit absolut pemanenan lebah flora lokal.</p>
+                        
+                        <div class="w-full pt-4 border-t-2 border-gray-300 flex flex-col items-start gap-4">
+                            <span class="text-3xl font-black text-[#111827] tracking-tighter text-[#EF4444]">Rp85K</span>
+                            <a href="#" class="w-full text-center flat-btn bg-[#F59E0B] text-white border-none hover:bg-[#D97706]">Beli Instan</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Produk 4 -->
+                <div class="bg-[#F3F4F6] p-4 rounded-2xl flex flex-col group cursor-pointer hover:bg-[#E5E7EB] transition-colors border-4 border-transparent hover:border-[#2563EB]">
+                    <div class="w-full aspect-[4/3] rounded-xl bg-gray-300 overflow-hidden relative mb-6">
+                        <img src="https://picsum.photos/400/300?random=14" alt="Kripik" class="w-full h-full object-cover">
+                    </div>
+                    <div class="px-2 flex flex-col flex-grow">
+                        <h3 class="text-2xl font-black flat-text-dark uppercase tracking-tighter mb-2 leading-tight">Kripik Singkong</h3>
+                        <p class="text-[#6B7280] font-medium text-sm leading-relaxed mb-6 flex-grow">Distribusi renyah cemilan olahan panen lokal.</p>
+                        
+                        <div class="w-full pt-4 border-t-2 border-gray-300 flex flex-col items-start gap-4">
+                            <span class="text-3xl font-black text-[#111827] tracking-tighter">Rp15K</span>
+                            <a href="#" class="w-full text-center flat-btn bg-[#2563EB] text-white border-2 border-transparent hover:bg-white hover:border-[#2563EB] hover:text-[#2563EB]">Akses Info</a>
+                        </div>
+                    </div>
                 </div>
             </div>
 
-            <!-- Empty Column for Grid Balance -->
-            <div class="hidden lg:block"></div>
+            <div class="mt-16 flex justify-center">
+                <a href="#" class="flat-btn flat-btn-dark px-12 py-5 text-lg border-4 border-[#1F2937]">Display Seluruh Entitas</a>
+            </div>
         </div>
     </div>
-</div> <!-- Close Hero Wrapper -->
 
-<!-- Struktur pengurus -->
-<div class="w-full py-24 sm:py-32 bg-blue-300 relative z-20 shadow-xl rounded-t-[3rem] -mt-8">
-    <div class="mx-auto max-w-7xl px-6 lg:px-8">
-        <div class="mx-auto max-w-2xl text-center">
-            <h2 class="text-3xl font-bold tracking-tight text-white sm:text-4xl">Struktur Pengurus</h2>
-            <p class="mt-4 text-lg leading-8 text-white">Tim pengelola BUMDes Go Digital Solusi yang
-                berpengalaman dan berdedikasi tinggi demi kemajuan desa.</p>
-        </div>
-        <ul role="list"
-            class="mx-auto mt-16 grid max-w-2xl grid-cols-1 gap-x-8 gap-y-12 sm:grid-cols-2 lg:mx-0 lg:max-w-none lg:grid-cols-3">
-            <!-- Direktur -->
-            <li
-                class="text-center bg-white/20 backdrop-blur-md rounded-3xl p-8 border border-white/40 shadow-xl hover:bg-white/30 transform hover:-translate-y-2 hover:scale-105 hover:shadow-2xl transition-all duration-300 cursor-pointer group">
-                <img class="mx-auto h-32 w-32 rounded-full object-cover shadow-md border-4 border-white group-hover:border-blue-200 transition-colors duration-300"
-                    src="https://ui-avatars.com/api/?name=Budi+Santoso&size=200&background=1e3a8a&color=fff"
-                    alt="Budi Santoso">
-                <h3
-                    class="mt-6 text-xl font-bold leading-7 tracking-tight text-gray-900 group-hover:text-blue-900 transition-colors duration-300">
-                    Budi Santoso</h3>
-                <p class="text-sm leading-6 text-blue-800 font-semibold mt-1">Direktur BUMDes</p>
-            </li>
-            <!-- Sekretaris -->
-            <li
-                class="text-center bg-white/20 backdrop-blur-md rounded-3xl p-8 border border-white/40 shadow-xl hover:bg-white/30 transform hover:-translate-y-2 hover:scale-105 hover:shadow-2xl transition-all duration-300 cursor-pointer group">
-                <img class="mx-auto h-32 w-32 rounded-full object-cover shadow-md border-4 border-white group-hover:border-blue-200 transition-colors duration-300"
-                    src="https://ui-avatars.com/api/?name=Siti+Aminah&size=200&background=1e3a8a&color=fff"
-                    alt="Siti Aminah">
-                <h3
-                    class="mt-6 text-xl font-bold leading-7 tracking-tight text-gray-900 group-hover:text-blue-900 transition-colors duration-300">
-                    Siti Aminah</h3>
-                <p class="text-sm leading-6 text-blue-800 font-semibold mt-1">Sekretaris</p>
-            </li>
-            <!-- Bendahara -->
-            <li
-                class="text-center bg-white/20 backdrop-blur-md rounded-3xl p-8 border border-white/40 shadow-xl hover:bg-white/30 transform hover:-translate-y-2 hover:scale-105 hover:shadow-2xl transition-all duration-300 cursor-pointer group">
-                <img class="mx-auto h-32 w-32 rounded-full object-cover shadow-md border-4 border-white group-hover:border-blue-200 transition-colors duration-300"
-                    src="https://ui-avatars.com/api/?name=Ahmad+Fauzi&size=200&background=1e3a8a&color=fff"
-                    alt="Ahmad Fauzi">
-                <h3
-                    class="mt-6 text-xl font-bold leading-7 tracking-tight text-gray-900 group-hover:text-blue-900 transition-colors duration-300">
-                    Ahmad Fauzi</h3>
-                <p class="text-sm leading-6 text-blue-800 font-semibold mt-1">Bendahara</p>
-            </li>
-        </ul>
-    </div>
 </div>
-
-<!-- Galeri Kegiatan -->
-<div class="w-full py-24 sm:py-32 relative z-20 overflow-hidden bg-[#f0f4ff]">
-    <!-- Ambient blur blobs -->
-    <div
-        class="pointer-events-none absolute -top-24 -left-24 w-[500px] h-[500px] bg-blue-300 rounded-full opacity-30 blur-3xl">
-    </div>
-    <div
-        class="pointer-events-none absolute -bottom-24 -right-24 w-[500px] h-[500px] bg-indigo-400 rounded-full opacity-25 blur-3xl">
-    </div>
-    <div
-        class="pointer-events-none absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[400px] bg-sky-200 rounded-full opacity-20 blur-3xl">
-    </div>
-    <div class="mx-auto max-w-7xl px-6 lg:px-8">
-        <div class="mx-auto max-w-2xl text-center mb-16">
-            <h2 class="text-3xl font-bold tracking-tight text-blue-300 sm:text-4xl">Galeri Kegiatan</h2>
-            <p class="mt-4 text-lg leading-8 text-gray-600">Dokumentasi berbagai aktivitas dan program unggulan dari
-                BUMDes Go Digital Solusi di Desa Sinulasi.</p>
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            <!-- Item 1 -->
-            <div
-                class="group relative overflow-hidden rounded-3xl shadow-md hover:shadow-2xl transition-all duration-300 cursor-pointer">
-                <img src="https://picsum.photos/800/600?random=1" alt="Kegiatan 1"
-                    class="w-full h-72 object-cover transform group-hover:scale-110 transition-transform duration-700 ease-in-out">
-                <div
-                    class="absolute inset-0 bg-gradient-to-t from-gray-900/90 via-gray-900/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                </div>
-                <div
-                    class="absolute bottom-0 left-0 p-8 translate-y-4 group-hover:translate-y-0 opacity-0 group-hover:opacity-100 transition-all duration-300">
-                    <h3 class="text-2xl font-bold text-white mb-2">Rapat Desa</h3>
-                    <p class="text-sm text-blue-200">Kegiatan koordinasi bulanan pengurus</p>
-                    <p class="flex items-center gap-1.5 text-xs text-white/60 mt-2">
-                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                        </svg>
-                        15 Januari 2026
-                    </p>
-                </div>
-            </div>
-
-            <!-- Item 2 -->
-            <div
-                class="group relative overflow-hidden rounded-3xl shadow-md hover:shadow-2xl transition-all duration-300 cursor-pointer">
-                <img src="https://picsum.photos/800/600?random=2" alt="Kegiatan 2"
-                    class="w-full h-72 object-cover transform group-hover:scale-110 transition-transform duration-700 ease-in-out">
-                <div
-                    class="absolute inset-0 bg-gradient-to-t from-gray-900/90 via-gray-900/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                </div>
-                <div
-                    class="absolute bottom-0 left-0 p-8 translate-y-4 group-hover:translate-y-0 opacity-0 group-hover:opacity-100 transition-all duration-300">
-                    <h3 class="text-2xl font-bold text-white mb-2">Pelatihan Digital</h3>
-                    <p class="text-sm text-blue-200">Pemberdayaan UMKM berbasis digital</p>
-                    <p class="flex items-center gap-1.5 text-xs text-white/60 mt-2">
-                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                        </svg>
-                        3 Februari 2026
-                    </p>
-                </div>
-            </div>
-
-            <!-- Item 3 -->
-            <div
-                class="group relative overflow-hidden rounded-3xl shadow-md hover:shadow-2xl transition-all duration-300 cursor-pointer">
-                <img src="https://picsum.photos/800/600?random=3" alt="Kegiatan 3"
-                    class="w-full h-72 object-cover transform group-hover:scale-110 transition-transform duration-700 ease-in-out">
-                <div
-                    class="absolute inset-0 bg-gradient-to-t from-gray-900/90 via-gray-900/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                </div>
-                <div
-                    class="absolute bottom-0 left-0 p-8 translate-y-4 group-hover:translate-y-0 opacity-0 group-hover:opacity-100 transition-all duration-300">
-                    <h3 class="text-2xl font-bold text-white mb-2">Pasar Desa</h3>
-                    <p class="text-sm text-blue-200">Gelar lapak UMKM lokal & hasil bumi</p>
-                    <p class="flex items-center gap-1.5 text-xs text-white/60 mt-2">
-                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                        </svg>
-                        22 Februari 2026
-                    </p>
-                </div>
-            </div>
-
-            <!-- Item 4 -->
-            <div
-                class="group relative overflow-hidden rounded-3xl shadow-md hover:shadow-2xl transition-all duration-300 cursor-pointer">
-                <img src="https://picsum.photos/800/600?random=4" alt="Kegiatan 4"
-                    class="w-full h-72 object-cover transform group-hover:scale-110 transition-transform duration-700 ease-in-out">
-                <div
-                    class="absolute inset-0 bg-gradient-to-t from-gray-900/90 via-gray-900/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                </div>
-                <div
-                    class="absolute bottom-0 left-0 p-8 translate-y-4 group-hover:translate-y-0 opacity-0 group-hover:opacity-100 transition-all duration-300">
-                    <h3 class="text-2xl font-bold text-white mb-2">Kerja Bakti</h3>
-                    <p class="text-sm text-blue-200">Gotong royong pembangunan desa</p>
-                    <p class="flex items-center gap-1.5 text-xs text-white/60 mt-2">
-                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                        </svg>
-                        1 Maret 2026
-                    </p>
-                </div>
-            </div>
-
-            <!-- Item 5 -->
-            <div
-                class="group relative overflow-hidden rounded-3xl shadow-md hover:shadow-2xl transition-all duration-300 cursor-pointer">
-                <img src="https://picsum.photos/800/600?random=5" alt="Kegiatan 5"
-                    class="w-full h-72 object-cover transform group-hover:scale-110 transition-transform duration-700 ease-in-out">
-                <div
-                    class="absolute inset-0 bg-gradient-to-t from-gray-900/90 via-gray-900/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                </div>
-                <div
-                    class="absolute bottom-0 left-0 p-8 translate-y-4 group-hover:translate-y-0 opacity-0 group-hover:opacity-100 transition-all duration-300">
-                    <h3 class="text-2xl font-bold text-white mb-2">Pertanian Cerdas</h3>
-                    <p class="text-sm text-blue-200">Program budidaya hidroponik BUMDes</p>
-                    <p class="flex items-center gap-1.5 text-xs text-white/60 mt-2">
-                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                        </svg>
-                        10 Maret 2026
-                    </p>
-                </div>
-            </div>
-
-            <!-- Item 6 -->
-            <div
-                class="group relative overflow-hidden rounded-3xl shadow-md hover:shadow-2xl transition-all duration-300 cursor-pointer">
-                <img src="https://picsum.photos/800/600?random=6" alt="Kegiatan 6"
-                    class="w-full h-72 object-cover transform group-hover:scale-110 transition-transform duration-700 ease-in-out">
-                <div
-                    class="absolute inset-0 bg-gradient-to-t from-gray-900/90 via-gray-900/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                </div>
-                <div
-                    class="absolute bottom-0 left-0 p-8 translate-y-4 group-hover:translate-y-0 opacity-0 group-hover:opacity-100 transition-all duration-300">
-                    <h3 class="text-2xl font-bold text-white mb-2">Sosialisasi</h3>
-                    <p class="text-sm text-blue-200">Pengenalan program BUMDes ke warga</p>
-                    <p class="flex items-center gap-1.5 text-xs text-white/60 mt-2">
-                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                        </svg>
-                        20 Maret 2026
-                    </p>
-                </div>
-            </div>
-        </div>
-
-        <div class="mt-14 mb-16 text-center">
-            <a href="#"
-                class="inline-flex justify-center items-center px-8 py-3.5 text-blue-700 bg-blue-50 border border-blue-100 hover:bg-blue-600 hover:text-white font-bold rounded-full transition-all duration-300 shadow-sm hover:shadow-lg">
-                Lihat Semua Kegiatan
-                <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                </svg>
-            </a>
-        </div>
-    </div>
-
-    {{-- ===== Katalog Produk (dalam div yang sama) ===== --}}
-    <div class="mx-auto max-w-7xl px-6 lg:px-8 pt-0 pb-24 sm:pb-32">
-        <div class="mx-auto max-w-2xl text-center mb-16">
-            <h2 class="text-3xl font-bold tracking-tight text-blue-300 sm:text-4xl">Katalog Produk Unggulan</h2>
-            <p class="mt-4 text-lg leading-8 text-gray-600">Berbagai produk lokal berkualitas hasil karya masyarakat
-                Desa Sinulasi yang dikelola oleh BUMDes.</p>
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            <!-- Produk 1 -->
-            <div
-                class="bg-gray-50 rounded-3xl p-6 border border-gray-100 shadow-sm hover:shadow-xl transition-all duration-300 group cursor-pointer flex flex-col">
-                <div class="relative w-full h-48 mb-6 overflow-hidden rounded-2xl">
-                    <img src="https://picsum.photos/400/300?random=11" alt="Produk 1"
-                        class="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-500">
-                    <div class="absolute top-3 right-3 bg-blue-600 text-white text-xs font-bold px-3 py-1 rounded-full">
-                        Baru</div>
-                </div>
-                <h3 class="text-xl font-bold text-gray-900 mb-2 group-hover:text-blue-600 transition-colors">
-                    Kerajinan Bambu</h3>
-                <p class="text-sm text-gray-600 mb-4 flex-grow">Kerajinan anyaman bambu asli buatan warga desa
-                    dengan desain modern.</p>
-                <div class="flex items-center justify-between mt-auto">
-                    <span class="text-lg font-bold text-blue-800">Rp 45.000</span>
-                    <button
-                        class="bg-blue-100 text-blue-700 hover:bg-blue-600 hover:text-white px-4 py-2 rounded-xl text-sm font-semibold transition-colors duration-300">Detail</button>
-                </div>
-            </div>
-
-            <!-- Produk 2 -->
-            <div
-                class="bg-gray-50 rounded-3xl p-6 border border-gray-100 shadow-sm hover:shadow-xl transition-all duration-300 group cursor-pointer flex flex-col">
-                <div class="relative w-full h-48 mb-6 overflow-hidden rounded-2xl">
-                    <img src="https://picsum.photos/400/300?random=12" alt="Produk 2"
-                        class="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-500">
-                </div>
-                <h3 class="text-xl font-bold text-gray-900 mb-2 group-hover:text-blue-600 transition-colors">Kopi
-                    Arabika Desa</h3>
-                <p class="text-sm text-gray-600 mb-4 flex-grow">Biji kopi pilihan yang dipetik dan di-roasting
-                    langsung dari perkebunan dataran tinggi.</p>
-                <div class="flex items-center justify-between mt-auto">
-                    <span class="text-lg font-bold text-blue-800">Rp 65.000</span>
-                    <button
-                        class="bg-blue-100 text-blue-700 hover:bg-blue-600 hover:text-white px-4 py-2 rounded-xl text-sm font-semibold transition-colors duration-300">Detail</button>
-                </div>
-            </div>
-
-            <!-- Produk 3 -->
-            <div
-                class="bg-gray-50 rounded-3xl p-6 border border-gray-100 shadow-sm hover:shadow-xl transition-all duration-300 group cursor-pointer flex flex-col">
-                <div class="relative w-full h-48 mb-6 overflow-hidden rounded-2xl">
-                    <img src="https://picsum.photos/400/300?random=13" alt="Produk 3"
-                        class="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-500">
-                    <div class="absolute top-3 right-3 bg-red-500 text-white text-xs font-bold px-3 py-1 rounded-full">
-                        Terlaris</div>
-                </div>
-                <h3 class="text-xl font-bold text-gray-900 mb-2 group-hover:text-blue-600 transition-colors">Madu
-                    Hutan Asli</h3>
-                <p class="text-sm text-gray-600 mb-4 flex-grow">Madu murni alami tanpa campuran hasil panen kelompok
-                    tani hutan lokal.</p>
-                <div class="flex items-center justify-between mt-auto">
-                    <span class="text-lg font-bold text-blue-800">Rp 85.000</span>
-                    <button
-                        class="bg-blue-100 text-blue-700 hover:bg-blue-600 hover:text-white px-4 py-2 rounded-xl text-sm font-semibold transition-colors duration-300">Detail</button>
-                </div>
-            </div>
-
-            <!-- Produk 4 -->
-            <div
-                class="bg-gray-50 rounded-3xl p-6 border border-gray-100 shadow-sm hover:shadow-xl transition-all duration-300 group cursor-pointer flex flex-col">
-                <div class="relative w-full h-48 mb-6 overflow-hidden rounded-2xl">
-                    <img src="https://picsum.photos/400/300?random=14" alt="Produk 4"
-                        class="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-500">
-                </div>
-                <h3 class="text-xl font-bold text-gray-900 mb-2 group-hover:text-blue-600 transition-colors">Kripik
-                    Singkong</h3>
-                <p class="text-sm text-gray-600 mb-4 flex-grow">Camilan super renyah khas desa dengan berbagai
-                    varian rasa rempah tradisional.</p>
-                <div class="flex items-center justify-between mt-auto">
-                    <span class="text-lg font-bold text-blue-800">Rp 15.000</span>
-                    <button
-                        class="bg-blue-100 text-blue-700 hover:bg-blue-600 hover:text-white px-4 py-2 rounded-xl text-sm font-semibold transition-colors duration-300">Detail</button>
-                </div>
-            </div>
-        </div>
-
-        <div class="mt-14 text-center">
-            <a href="#"
-                class="inline-flex justify-center items-center px-8 py-3.5 text-blue-700 bg-blue-50 border border-blue-100 hover:bg-blue-600 hover:text-white font-bold rounded-full transition-all duration-300 shadow-sm hover:shadow-lg">
-                Lihat Semua Produk
-                <svg class="w-5 h-5 ml-2 transition-transform duration-300 transform group-hover:translate-x-1"
-                    fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3">
-                    </path>
-                </svg>
-            </a>
-        </div>
-    </div>
-</div>
-
 @endsection

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin\Laporan;
 use App\Http\Controllers\Controller;
 use App\Models\Transaksi;
 use App\Models\UnitUsaha;
+use App\Models\ProdukJasa;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 
@@ -101,6 +102,53 @@ class LaporanController extends Controller
             $tahunTersedia = collect([date('Y')]);
         }
 
+        // --- Data for Laporan Stok Tab ---
+        $produkId = $request->get('produk_id', '');
+        $stokStartDate = $request->get('stok_start_date', '');
+        $stokEndDate = $request->get('stok_end_date', '');
+
+        $queryStok = ProdukJasa::with('unitUsaha');
+        if ($produkId) {
+            $queryStok->where('id', $produkId);
+        }
+        if ($stokStartDate) {
+            $queryStok->whereDate('created_at', '>=', $stokStartDate);
+        }
+        if ($stokEndDate) {
+            $queryStok->whereDate('created_at', '<=', $stokEndDate);
+        }
+
+        $produkJasas = $queryStok->orderBy('nama_produk', 'asc')->get();
+        $allProduk = ProdukJasa::orderBy('nama_produk', 'asc')->get();
+        $totalNilaiPersediaan = $produkJasas->sum('nilai_persediaan');
+
+        // --- Akuntansi: Laba Rugi & Posisi Keuangan ---
+        $akuns = \App\Models\AkunCoa::withSum('jurnals as total_debit', 'debit')
+            ->withSum('jurnals as total_kredit', 'kredit')
+            ->get()
+            ->map(function ($akun) {
+                if (in_array($akun->kelompok, ['Aset', 'Beban'])) {
+                    $akun->saldo_akhir = $akun->saldo_nominal + $akun->total_debit - $akun->total_kredit;
+                } else {
+                    $akun->saldo_akhir = $akun->saldo_nominal + $akun->total_kredit - $akun->total_debit;
+                }
+                return $akun;
+            });
+
+        $aktiva = $akuns->where('kelompok', 'Aset');
+        $pasiva = $akuns->where('kelompok', 'Kewajiban');
+        $ekuitas = $akuns->where('kelompok', 'Ekuitas');
+        $pendapatan = $akuns->where('kelompok', 'Pendapatan');
+        $beban = $akuns->where('kelompok', 'Beban');
+
+        $totalAktiva = $aktiva->sum('saldo_akhir');
+        $totalPasiva = $pasiva->sum('saldo_akhir');
+        $totalEkuitas = $ekuitas->sum('saldo_akhir');
+        $totalPendapatan = $pendapatan->sum('saldo_akhir');
+        $totalBeban = $beban->sum('saldo_akhir');
+        $labaBersihAkuntansi = $totalPendapatan - $totalBeban;
+        $totalModalDanLaba = $totalEkuitas + $labaBersihAkuntansi;
+
         return view('admin.laporan.laporan', compact(
             'transaksis',
             'totalPemasukan',
@@ -113,7 +161,14 @@ class LaporanController extends Controller
             'tahunDipilih',
             'bulanDipilih',
             'mingguDipilih',
-            'tahunTersedia'
+            'tahunTersedia',
+            'produkJasas',
+            'allProduk',
+            'produkId',
+            'totalNilaiPersediaan',
+            'aktiva', 'pasiva', 'ekuitas', 'pendapatan', 'beban',
+            'totalAktiva', 'totalPasiva', 'totalEkuitas', 'totalPendapatan', 'totalBeban',
+            'labaBersihAkuntansi', 'totalModalDanLaba'
         ));
     }
 
@@ -217,5 +272,131 @@ class LaporanController extends Controller
         ))->setPaper('a4', 'portrait');
 
         return $pdf->download('Laporan_BUMDes_' . str_replace(' ', '_', $periodLabel) . '.pdf');
+    }
+    // ─────────────────────────────────────────────────────────────────────
+    // LAPORAN STOK
+    // ─────────────────────────────────────────────────────────────────────
+    public function stok(Request $request)
+    {
+        $produkId      = $request->get('produk_id', '');
+        $stokStartDate = $request->get('stok_start_date', '');
+        $stokEndDate   = $request->get('stok_end_date', '');
+
+        $query = ProdukJasa::with('unitUsaha');
+
+        if ($produkId) {
+            $query->where('id', $produkId);
+        }
+        if ($stokStartDate) {
+            $query->whereDate('updated_at', '>=', $stokStartDate);
+        }
+        if ($stokEndDate) {
+            $query->whereDate('updated_at', '<=', $stokEndDate);
+        }
+
+        $produkJasas = $query->orderBy('nama_produk', 'asc')->get();
+        $allProduk   = ProdukJasa::orderBy('nama_produk', 'asc')->get();
+
+        $totalNilaiPersediaan = $produkJasas->sum('nilai_persediaan');
+
+        return view('admin.laporan.laporanstok', compact(
+            'produkJasas',
+            'allProduk',
+            'produkId',
+            'stokStartDate',
+            'stokEndDate',
+            'totalNilaiPersediaan'
+        ));
+    }
+
+    public function exportStokCsv(Request $request)
+    {
+        $produkId = $request->get('produk_id', '');
+        $stokStartDate = $request->get('stok_start_date', '');
+        $stokEndDate = $request->get('stok_end_date', '');
+
+        $query = ProdukJasa::with('unitUsaha');
+        
+        if ($produkId) {
+            $query->where('id', $produkId);
+        }
+        if ($stokStartDate) {
+            $query->whereDate('created_at', '>=', $stokStartDate);
+        }
+        if ($stokEndDate) {
+            $query->whereDate('created_at', '<=', $stokEndDate);
+        }
+
+        $produkJasas = $query->orderBy('nama_produk', 'asc')->get();
+        $totalNilaiPersediaan = $produkJasas->sum('nilai_persediaan');
+
+        $filename = 'Laporan_Stok_BUMDes_' . date('Ymd_His') . '.csv';
+
+        $headers = [
+            'Content-Type' => 'text/csv; charset=UTF-8',
+            'Content-Disposition' => 'attachment; filename="' . $filename . '"',
+            'Pragma' => 'no-cache',
+            'Cache-Control' => 'must-revalidate, post-check=0, pre-check=0',
+            'Expires' => '0',
+        ];
+
+        $callback = function () use ($produkJasas, $totalNilaiPersediaan) {
+            $out = fopen('php://output', 'w');
+            fprintf($out, chr(0xEF) . chr(0xBB) . chr(0xBF)); // BOM UTF-8
+
+            fputcsv($out, ['LAPORAN STOK PRODUK BUMDES'], ';');
+            fputcsv($out, ['Dicetak: ' . now()->format('d/m/Y H:i')], ';');
+            fputcsv($out, [''], ';');
+
+            fputcsv($out, ['No', 'Nama Produk', 'Unit Usaha', 'Harga Jual', 'Sisa Stok', 'Nilai Persediaan'], ';');
+            foreach ($produkJasas as $i => $p) {
+                fputcsv($out, [
+                    $i + 1,
+                    $p->nama_produk,
+                    $p->unitUsaha->nama_usaha ?? '-',
+                    (float) $p->harga_jual,
+                    $p->stok_awal,
+                    (float) $p->nilai_persediaan,
+                ], ';');
+            }
+
+            fputcsv($out, [''], ';');
+            fputcsv($out, ['', '', '', '', 'TOTAL NILAI PERSEDIAAN', (float) $totalNilaiPersediaan], ';');
+
+            fclose($out);
+        };
+
+        return response()->stream($callback, 200, $headers);
+    }
+
+    public function exportStokPdf(Request $request)
+    {
+        $produkId = $request->get('produk_id', '');
+        $stokStartDate = $request->get('stok_start_date', '');
+        $stokEndDate = $request->get('stok_end_date', '');
+
+        $query = ProdukJasa::with('unitUsaha');
+        
+        if ($produkId) {
+            $query->where('id', $produkId);
+        }
+        if ($stokStartDate) {
+            $query->whereDate('created_at', '>=', $stokStartDate);
+        }
+        if ($stokEndDate) {
+            $query->whereDate('created_at', '<=', $stokEndDate);
+        }
+
+        $produkJasas = $query->orderBy('nama_produk', 'asc')->get();
+        $totalNilaiPersediaan = $produkJasas->sum('nilai_persediaan');
+
+        $pdf = Pdf::loadView('admin.laporan.laporanstok-pdf', compact(
+            'produkJasas',
+            'totalNilaiPersediaan',
+            'stokStartDate',
+            'stokEndDate'
+        ))->setPaper('a4', 'portrait');
+
+        return $pdf->download('Laporan_Stok_BUMDes_' . date('Ymd_His') . '.pdf');
     }
 }

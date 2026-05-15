@@ -1,381 +1,309 @@
 @extends('layouts.admin')
 
-@section('header_title', 'Input Data Awal & Master')
+@section('header_title', 'Master Anggota')
 
 @section('content')
-    <div class="space-y-6" x-data="{ isModalOpen: false }">
-        <!-- Header Page (Optional, bisa dihilangkan jika title cukup) -->
-        <div class="flex items-center justify-between">
-            <h2 class="text-2xl font-bold text-gray-800">Input Data Awal & Master</h2>
+<div class="space-y-6" x-data="{ isModalOpen: false }">
+    <!-- Header Page -->
+    <div class="flex items-center justify-between">
+        <div class="inline-block px-[14px] py-[6px] bg-[#F5F5F4] text-[#57534E] font-semibold text-[14px] rounded-[9999px]">
+            Dashboard Data Terpadu
+        </div>
+    </div>
+
+    <div class="flex flex-col xl:flex-row gap-8 items-start">
+        <!-- Sidebar Buttons (Kiri) -->
+        <div class="w-full xl:w-1/4 shrink-0">
+            @include('admin.input data.inputdata')
         </div>
 
-        @include('admin.input data.inputdata')
+        <!-- Content Area (Kanan) -->
+        <div class="w-full xl:w-3/4 flex-1">
+            <!-- Data Table Section -->
+            <div class="bg-[#FAFAF9] border border-[#D6D3D1] rounded-[12px] overflow-hidden hover:shadow-[0_4px_16px_rgba(28,25,23,0.06)] transition-shadow">
+                
+                <!-- Table Header Area -->
+                <div class="px-6 py-5 border-b border-[#D6D3D1] flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                    <h3 class="text-2xl font-display font-bold text-[#1C1917] tracking-tight">Master Anggota</h3>
+                    <button @click="isModalOpen = true"
+                        class="flex items-center justify-center gap-2 px-6 py-3 bg-[#C2410C] hover:bg-[#9A3412] text-white rounded-[8px] font-semibold text-[14px] transition-all shadow-sm hover:shadow-[0_4px_12px_rgba(194,65,12,0.25)]">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                        </svg>
+                        Tambah Data
+                    </button>
+                </div>
 
-        <!-- Data Table Section -->
-        <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden mt-8">
-            <div class="px-6 py-4 border-b border-gray-100 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                <h3 class="text-lg font-semibold text-gray-800">Master Data Anggota</h3>
-                <button @click="isModalOpen = true"
-                    class="flex items-center justify-center gap-2 px-4 py-2 bg-[#20b2aa] hover:bg-[#1c9c95] text-white rounded-lg font-medium transition shadow-sm text-sm">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
-                    </svg>
-                    Tambah Anggota
-                </button>
-            </div>
-
-            <div class="overflow-x-auto">
-                <table class="w-full text-sm text-left text-gray-500">
-                    <thead class="text-xs text-gray-700 uppercase bg-gray-50/50 border-b border-gray-100">
-                        <tr>
-                            <th scope="col" class="px-6 py-4 font-semibold">No. Anggota</th>
-                            <th scope="col" class="px-6 py-4 font-semibold">Nama</th>
-                            <th scope="col" class="px-6 py-4 font-semibold">Simpanan Pokok</th>
-                            <th scope="col" class="px-6 py-4 font-semibold">Simpanan Wajib</th>
-                            <th scope="col" class="px-6 py-4 font-semibold">Total Simpanan</th>
-                            <th scope="col" class="px-6 py-4 font-semibold text-right">Aksi</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @forelse($anggotas as $anggota)
-                            <tr class="bg-white border-b border-gray-50 hover:bg-blue-50/20 transition-colors">
-                                <td class="px-6 py-4 font-medium text-gray-900">
-                                    AGN-{{ str_pad($anggota->id, 3, '0', STR_PAD_LEFT) }}</td>
-                                <td class="px-6 py-4">{{ $anggota->nama }}</td>
-                                <td class="px-6 py-4">Rp 0</td>
-                                <td class="px-6 py-4">Rp 0</td>
-                                <td class="px-6 py-4 font-medium text-blue-600">Rp 0</td>
-                                <td class="px-6 py-4 text-right flex justify-end gap-2">
-                                    <!-- Tombol Edit -->
-                                    <button @click="$dispatch('open-edit', {{ json_encode($anggota) }})"
-                                        class="flex items-center justify-center p-2 rounded-lg bg-blue-50 text-blue-600 hover:bg-blue-600 hover:text-white transition-colors"
-                                        title="Edit">
-                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z">
-                                            </path>
-                                        </svg>
-                                    </button>
-                                    <!-- Tombol Hapus -->
-                                    <form action="{{ route('anggota.destroy', $anggota->id) }}" method="POST"
-                                        onsubmit="return confirm('Apakah Anda yakin ingin menghapus anggota ini?');"
-                                        class="inline">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit"
-                                            class="flex items-center justify-center p-2 rounded-lg bg-red-50 text-red-600 hover:bg-red-600 hover:text-white transition-colors"
-                                            title="Hapus">
-                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                    d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16">
-                                                </path>
-                                            </svg>
-                                        </button>
-                                    </form>
-                                </td>
-                            </tr>
-                        @empty
+                <div class="overflow-x-auto min-h-[400px]">
+                    <table class="w-full text-left font-semibold text-[#1C1917]">
+                        <thead class="text-[12px] uppercase bg-[#F5F5F4] border-b border-[#D6D3D1] text-[#78716C]">
                             <tr>
-                                <td colspan="6" class="p-8 text-center text-gray-500">
-                                    Belum ada data anggota.
-                                </td>
+                                <th scope="col" class="px-6 py-4 font-semibold tracking-wide">No. Anggota</th>
+                                <th scope="col" class="px-6 py-4 font-semibold tracking-wide">Nama</th>
+                                <th scope="col" class="px-6 py-4 font-semibold tracking-wide">Simpanan Pokok</th>
+                                <th scope="col" class="px-6 py-4 font-semibold tracking-wide">Simpanan Wajib</th>
+                                <th scope="col" class="px-6 py-4 font-semibold tracking-wide">Total Simpanan</th>
+                                <th scope="col" class="px-6 py-4 font-semibold tracking-wide text-right">Aksi</th>
                             </tr>
-                        @endforelse
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                            @forelse($anggotas as $anggota)
+                                <tr class="border-b border-[#D6D3D1] last:border-0 hover:bg-[#F5F5F4] transition-colors">
+                                    <td class="px-6 py-4 font-semibold text-[#1C1917]">
+                                        AGN-{{ str_pad($anggota->id, 3, '0', STR_PAD_LEFT) }}</td>
+                                    <td class="px-6 py-4 font-semibold text-[#1C1917]">{{ $anggota->nama }}</td>
+                                    <td class="px-6 py-4 text-[#57534E]">Rp 0</td>
+                                    <td class="px-6 py-4 text-[#57534E]">Rp 0</td>
+                                    <td class="px-6 py-4 font-semibold text-[#16A34A]">Rp 0</td>
+                                    <td class="px-6 py-4 text-right">
+                                        <div class="flex justify-end gap-2">
+                                            <!-- Tombol Edit -->
+                                            <button @click="$dispatch('open-edit', {{ json_encode($anggota) }})"
+                                                class="px-4 py-2 bg-transparent text-[#1C1917] border border-[#D6D3D1] rounded-[8px] hover:bg-[#F5F5F4] font-semibold text-[13px] transition-colors"
+                                                title="Edit">
+                                                Edit
+                                            </button>
+                                            <!-- Tombol Hapus -->
+                                            <form action="{{ route('anggota.destroy', $anggota->id) }}" method="POST"
+                                                onsubmit="return confirm('Hapus data ini dari sistem secara permanen?');"
+                                                class="inline">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit"
+                                                    class="px-4 py-2 bg-[#DC2626] text-white border border-transparent rounded-[8px] hover:bg-[#B91C1C] font-semibold text-[13px] transition-colors"
+                                                    title="Hapus">
+                                                    Hapus
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </td>
+                                </tr>
+                            @empty
+                                <tr>
+                                    <td colspan="6" class="px-6 py-12 text-center text-[#78716C] font-semibold">
+                                        Belum ada data anggota yang terdaftar.
+                                    </td>
+                                </tr>
+                            @endforelse
+                        </tbody>
+                    </table>
+                </div>
             </div>
-        </div>
+        </div> 
+    </div>
 
-
-        <!-- Modal Background overlay -->
-        <div x-show="isModalOpen" x-transition.opacity.duration.300ms
-            class="fixed inset-0 z-50 bg-gray-900/50 backdrop-blur-sm flex items-center justify-center overflow-y-auto overflow-x-hidden p-4 sm:p-0"
-            style="display: none;">
-            <!-- Modal Content -->
-            <div x-show="isModalOpen" @click.away="isModalOpen = false" x-transition:enter="ease-out duration-300"
-                x-transition:enter-start="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
-                x-transition:enter-end="opacity-100 translate-y-0 sm:scale-100" x-transition:leave="ease-in duration-200"
-                x-transition:leave-start="opacity-100 translate-y-0 sm:scale-100"
-                x-transition:leave-end="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
-                class="relative bg-white/40 backdrop-blur-md rounded-2xl shadow-xl border border-white/40 w-full max-w-2xl sm:mx-auto my-8 max-h-[90vh] flex flex-col overflow-hidden">
-                <!-- Modal Header -->
-                <div class="p-5 md:p-6 border-b border-gray-100 shrink-0">
-                    <div class="flex items-center justify-between">
-                        <div>
-                            <h3 class="text-xl font-bold text-white">Tambah Anggota Baru</h3>
-                            <p class="text-white text-sm mt-1">Masukkan data lengkap anggota BUMDes.</p>
-                        </div>
-                        <button @click="isModalOpen = false" type="button"
-                            class="text-white bg-transparent hover:bg-gray-100 hover:text-gray-900 rounded-lg text-sm w-8 h-8 flex justify-center items-center transition-colors">
-                            <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
-                                viewBox="0 0 14 14">
-                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
-                            </svg>
-                            <span class="sr-only">Tutup modal</span>
-                        </button>
+    <!-- Modal Background overlay -->
+    <div x-show="isModalOpen" x-transition.opacity.duration.300ms
+        class="fixed inset-0 z-[70] bg-[#1C1917]/80 backdrop-blur-sm flex items-center justify-center p-4 sm:p-0"
+        style="display: none;">
+        
+        <div x-show="isModalOpen" @click.away="isModalOpen = false" x-transition:enter="ease-out duration-300"
+            x-transition:enter-start="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+            x-transition:enter-end="opacity-100 translate-y-0 sm:scale-100" x-transition:leave="ease-in duration-200"
+            x-transition:leave-start="opacity-100 translate-y-0 sm:scale-100"
+            x-transition:leave-end="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+            class="relative bg-[#FAFAF9] border border-[#D6D3D1] shadow-[0_24px_48px_rgba(28,25,23,0.12)] w-full max-w-2xl sm:mx-auto my-8 max-h-[90vh] flex flex-col overflow-hidden rounded-[12px]">
+            
+            <!-- Modal Header -->
+            <div class="p-6 border-b border-[#D6D3D1] shrink-0 bg-[#FAFAF9] relative">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <h3 class="text-2xl font-display font-bold text-[#1C1917]">Tambah Anggota</h3>
+                        <p class="text-[#57534E] text-[14px] mt-1">Registrasi entitas baru ke sistem basis data.</p>
                     </div>
-
-                    <!-- Alert Messages -->
-                    @if(session('success'))
-                        <div class="mt-4 bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-lg relative"
-                            role="alert">
-                            <span class="block sm:inline">{{ session('success') }}</span>
-                        </div>
-                    @endif
-
-                    @if($errors->any())
-                        <div class="mt-4 bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg relative"
-                            role="alert">
-                            <ul class="list-disc list-inside">
-                                @foreach ($errors->all() as $error)
-                                    <li>{{ $error }}</li>
-                                @endforeach
-                            </ul>
-                        </div>
-                    @endif
-                </div>
-
-                <!-- Modal Body (Form) -->
-                <div class="p-5 md:p-6 overflow-y-auto flex-1">
-                    <form action="{{ route('anggota.store') }}" method="POST" enctype="multipart/form-data"
-                        id="formTambahAnggota">
-                        @csrf
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <!-- NIK -->
-                            <div class="md:col-span-2">
-                                <label for="nik" class="block text-sm font-medium text-white mb-1">NIK (Nomor Induk
-                                    Kependudukan) <span class="text-red-500">*</span></label>
-                                <input type="text" id="nik" name="nik" placeholder="Masukkan 16 digit NIK"
-                                    class="w-full px-4 py-2 bg-white/20 border border-gray-400/60 rounded-lg focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50 focus:bg-white/60 outline-none transition-all placeholder-gray-500 shadow-sm"
-                                    required>
-                            </div>
-
-                            <!-- Nama Lengkap -->
-                            <div class="md:col-span-2">
-                                <label for="nama" class="block text-sm font-medium text-white mb-1">Nama Lengkap <span
-                                        class="text-red-500">*</span></label>
-                                <input type="text" id="nama" name="nama" placeholder="Sesuai KTP"
-                                    class="w-full px-4 py-2 bg-white/20 border border-gray-400/60 rounded-lg focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50 focus:bg-white/60 outline-none transition-all placeholder-gray-500 shadow-sm"
-                                    required>
-                            </div>
-
-                            <!-- Tempat Lahir -->
-                            <div>
-                                <label for="tempat_lahir" class="block text-sm font-medium text-white mb-1">Tempat
-                                    Lahir</label>
-                                <input type="text" id="tempat_lahir" name="tempat_lahir" placeholder="Kota/Kabupaten"
-                                    class="w-full px-4 py-2 bg-white/20 border border-gray-400/60 rounded-lg focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50 focus:bg-white/60 outline-none transition-all placeholder-gray-500 shadow-sm">
-                            </div>
-
-                            <!-- Tanggal Lahir -->
-                            <div>
-                                <label for="tanggal_lahir" class="block text-sm font-medium text-white mb-1">Tanggal
-                                    Lahir</label>
-                                <input type="date" id="tanggal_lahir" name="tanggal_lahir"
-                                    class="w-full px-4 py-2 bg-white/20 border border-gray-400/60 rounded-lg focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50 focus:bg-white/60 outline-none transition-all text-gray-700 shadow-sm">
-                            </div>
-
-                            <!-- Jenis Kelamin -->
-                            <div class="md:col-span-2">
-                                <label class="block text-sm font-medium text-white mb-1">Jenis Kelamin</label>
-                                <div class="flex gap-4 mt-2">
-                                    <label class="inline-flex items-center">
-                                        <input type="radio" name="jk" value="Laki-laki"
-                                            class="w-4 h-4 text-blue-600 focus:ring-blue-500 border-gray-300">
-                                        <span class="ml-2 text-sm text-white">Laki-laki</span>
-                                    </label>
-                                    <label class="inline-flex items-center">
-                                        <input type="radio" name="jk" value="Perempuan"
-                                            class="w-4 h-4 text-blue-600 focus:ring-blue-500 border-gray-300">
-                                        <span class="ml-2 text-sm text-white">Perempuan</span>
-                                    </label>
-                                </div>
-                            </div>
-
-                            <!-- Alamat -->
-                            <div class="md:col-span-2">
-                                <label for="alamat" class="block text-sm font-medium text-white mb-1">Alamat
-                                    Lengkap</label>
-                                <textarea id="alamat" name="alamat" rows="2" placeholder="Jalan, RT/RW, Desa/Kelurahan"
-                                    class="w-full px-4 py-2 bg-white/20 border border-gray-400/60 rounded-lg focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50 focus:bg-white/60 outline-none transition-all placeholder-gray-500 shadow-sm"></textarea>
-                            </div>
-
-                            <!-- No HP -->
-                            <div class="md:col-span-2">
-                                <label for="no_hp" class="block text-sm font-medium text-white mb-1">No. HP / WhatsApp
-                                    <span class="text-red-500">*</span></label>
-                                <div class="relative">
-                                    <span
-                                        class="absolute inset-y-0 left-0 flex items-center pl-4 text-gray-600 bg-gray-100/50 border-r border-gray-400/60 px-3 rounded-l-lg backdrop-blur-sm">+62</span>
-                                    <input type="text" id="no_hp" name="no_hp" placeholder="81234567890"
-                                        class="w-full pl-16 pr-4 py-2 bg-white/20 border border-gray-400/60 rounded-lg focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50 focus:bg-white/60 outline-none transition-all placeholder-gray-500 shadow-sm"
-                                        required>
-                                </div>
-                            </div>
-                        </div>
-                    </form>
-                </div>
-
-                <!-- Modal Footer -->
-                <div class="flex items-center justify-end p-5 md:p-6 border-t border-gray-100/50 gap-3 shrink-0">
                     <button @click="isModalOpen = false" type="button"
-                        class="px-5 py-2.5 border border-gray-400/50 text-gray-700 bg-white/20 rounded-xl hover:bg-white/40 font-medium transition-all focus:outline-none focus:ring-2 focus:ring-gray-200 shadow-sm">
-                        Batal
-                    </button>
-                    <button type="submit" form="formTambahAnggota"
-                        class="px-5 py-2.5 bg-blue-300 text-white rounded-xl hover:bg-blue-700 font-medium transition-colors shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 flex items-center gap-2">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                        class="text-[#78716C] hover:text-[#1C1917] p-1 transition-colors">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
                         </svg>
-                        Simpan Data
                     </button>
                 </div>
-            </div>
-        </div>
 
-        <!-- Edit Modal Background overlay -->
-        <div x-data="{ 
-                                                                            isEditModalOpen: false, 
-                                                                            editData: {},
-                                                                            submitUrl: '' 
-                                                                         }"
-            @open-edit.window="isEditModalOpen = true; editData = $event.detail; submitUrl = '{{ route('anggota.update', ':id') }}'.replace(':id', editData.id)"
-            x-show="isEditModalOpen" x-transition.opacity.duration.300ms
-            class="fixed inset-0 z-50 bg-gray-900/50 backdrop-blur-sm flex items-center justify-center overflow-y-auto overflow-x-hidden p-4 sm:p-0"
-            style="display: none;">
-            <!-- Modal Content -->
-            <div x-show="isEditModalOpen" @click.away="isEditModalOpen = false" x-transition:enter="ease-out duration-300"
-                x-transition:enter-start="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
-                x-transition:enter-end="opacity-100 translate-y-0 sm:scale-100" x-transition:leave="ease-in duration-200"
-                x-transition:leave-start="opacity-100 translate-y-0 sm:scale-100"
-                x-transition:leave-end="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
-                class="relative bg-white/40 backdrop-blur-md rounded-2xl shadow-xl border border-white/40 w-full max-w-2xl sm:mx-auto my-8 max-h-[90vh] flex flex-col overflow-hidden">
-                <!-- Modal Header -->
-                <div class="p-5 md:p-6 border-b border-gray-100 shrink-0">
-                    <div class="flex items-center justify-between">
-                        <div>
-                            <h3 class="text-xl font-bold text-white">Edit Data Anggota</h3>
-                            <p class="text-white text-sm mt-1">Perbarui data anggota BUMDes.</p>
-                        </div>
-                        <button @click="isEditModalOpen = false" type="button"
-                            class="text-white bg-transparent hover:bg-gray-100 hover:text-gray-900 rounded-lg text-sm w-8 h-8 flex justify-center items-center transition-colors">
-                            <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
-                                viewBox="0 0 14 14">
-                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
-                            </svg>
-                            <span class="sr-only">Tutup modal</span>
-                        </button>
+                @if(session('success'))
+                    <div class="mt-4 bg-[#16A34A]/10 border border-[#16A34A] text-[#16A34A] px-4 py-3 rounded-[8px] font-semibold text-[14px]" role="alert">
+                        {{ session('success') }}
                     </div>
-                </div>
+                @endif
+                @if($errors->any())
+                    <div class="mt-4 bg-[#DC2626]/10 border border-[#DC2626] text-[#DC2626] px-4 py-3 rounded-[8px] font-semibold text-[14px]" role="alert">
+                        <ul class="list-disc list-inside">
+                            @foreach ($errors->all() as $error) <li>{{ $error }}</li> @endforeach
+                        </ul>
+                    </div>
+                @endif
+            </div>
 
-                <!-- Modal Body (Form) -->
-                <div class="p-5 md:p-6 overflow-y-auto flex-1">
-                    <form :action="submitUrl" method="POST" enctype="multipart/form-data" id="formEditAnggota">
-                        @csrf
-                        @method('PUT')
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <!-- NIK -->
-                            <div class="md:col-span-2">
-                                <label class="block text-sm font-medium text-white mb-1">NIK <span
-                                        class="text-red-500">*</span></label>
-                                <input type="text" name="nik" x-model="editData.nik"
-                                    class="w-full px-4 py-2 bg-white/20 border border-gray-400/60 rounded-lg focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50 focus:bg-white/60 outline-none transition-all placeholder-gray-500 shadow-sm"
-                                    required>
-                            </div>
+            <!-- Modal Body (Form) -->
+            <div class="p-6 overflow-y-auto flex-1 bg-[#FAFAF9]">
+                <form action="{{ route('anggota.store') }}" method="POST" id="formTambahAnggota">
+                    @csrf
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="md:col-span-2">
+                            <label class="block text-[14px] font-semibold text-[#1C1917] mb-2">NIK <span class="text-[#DC2626]">*</span></label>
+                            <input type="text" name="nik" placeholder="16 DIGIT NIK"
+                                class="w-full px-4 py-3 bg-[#F5F5F4] border border-[#D6D3D1] rounded-[8px] text-[#1C1917] text-[16px] placeholder-[#78716C] focus:outline-none focus:border-[#C2410C] focus:ring-[3px] focus:ring-[#C2410C]/15 transition-all" required>
+                        </div>
 
-                            <!-- Nama Lengkap -->
-                            <div class="md:col-span-2">
-                                <label class="block text-sm font-medium text-white mb-1">Nama Lengkap <span
-                                        class="text-red-500">*</span></label>
-                                <input type="text" name="nama" x-model="editData.nama"
-                                    class="w-full px-4 py-2 bg-white/20 border border-gray-400/60 rounded-lg focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50 focus:bg-white/60 outline-none transition-all placeholder-gray-500 shadow-sm"
-                                    required>
-                            </div>
+                        <div class="md:col-span-2">
+                            <label class="block text-[14px] font-semibold text-[#1C1917] mb-2">Nama <span class="text-[#DC2626]">*</span></label>
+                            <input type="text" name="nama" placeholder="SESUAI KTP"
+                                class="w-full px-4 py-3 bg-[#F5F5F4] border border-[#D6D3D1] rounded-[8px] text-[#1C1917] text-[16px] placeholder-[#78716C] focus:outline-none focus:border-[#C2410C] focus:ring-[3px] focus:ring-[#C2410C]/15 transition-all" required>
+                        </div>
 
-                            <!-- Tempat Lahir -->
-                            <div>
-                                <label class="block text-sm font-medium text-white mb-1">Tempat Lahir</label>
-                                <input type="text" name="tempat_lahir" x-model="editData.tempat_lahir"
-                                    class="w-full px-4 py-2 bg-white/20 border border-gray-400/60 rounded-lg focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50 focus:bg-white/60 outline-none transition-all placeholder-gray-500 shadow-sm">
-                            </div>
+                        <div>
+                            <label class="block text-[14px] font-semibold text-[#1C1917] mb-2">Tempat Lahir</label>
+                            <input type="text" name="tempat_lahir" placeholder="KOTA/KAB"
+                                class="w-full px-4 py-3 bg-[#F5F5F4] border border-[#D6D3D1] rounded-[8px] text-[#1C1917] text-[16px] placeholder-[#78716C] focus:outline-none focus:border-[#C2410C] focus:ring-[3px] focus:ring-[#C2410C]/15 transition-all">
+                        </div>
 
-                            <!-- Tanggal Lahir -->
-                            <div>
-                                <label class="block text-sm font-medium text-white mb-1">Tanggal Lahir</label>
-                                <input type="date" name="tanggal_lahir" x-model="editData.tanggal_lahir"
-                                    class="w-full px-4 py-2 bg-white/20 border border-gray-400/60 rounded-lg focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50 focus:bg-white/60 outline-none transition-all text-gray-700 shadow-sm">
-                            </div>
+                        <div>
+                            <label class="block text-[14px] font-semibold text-[#1C1917] mb-2">Tanggal Lahir</label>
+                            <input type="date" name="tanggal_lahir"
+                                class="w-full px-4 py-3 bg-[#F5F5F4] border border-[#D6D3D1] rounded-[8px] text-[#1C1917] text-[16px] focus:outline-none focus:border-[#C2410C] focus:ring-[3px] focus:ring-[#C2410C]/15 transition-all">
+                        </div>
 
-                            <!-- Jenis Kelamin -->
-                            <div class="md:col-span-2">
-                                <label class="block text-sm font-medium text-white mb-1">Jenis Kelamin</label>
-                                <div class="flex gap-4 mt-2">
-                                    <label class="inline-flex items-center">
-                                        <input type="radio" name="jk" value="Laki-laki" x-model="editData.jk"
-                                            class="w-4 h-4 text-blue-600 focus:ring-blue-500 border-gray-300">
-                                        <span class="ml-2 text-sm text-white">Laki-laki</span>
-                                    </label>
-                                    <label class="inline-flex items-center">
-                                        <input type="radio" name="jk" value="Perempuan" x-model="editData.jk"
-                                            class="w-4 h-4 text-blue-600 focus:ring-blue-500 border-gray-300">
-                                        <span class="ml-2 text-sm text-white">Perempuan</span>
-                                    </label>
-                                </div>
-                            </div>
-
-                            <!-- Alamat -->
-                            <div class="md:col-span-2">
-                                <label class="block text-sm font-medium text-white mb-1">Alamat Lengkap</label>
-                                <textarea name="alamat" rows="2" x-model="editData.alamat"
-                                    class="w-full px-4 py-2 bg-white/20 border border-gray-400/60 rounded-lg focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50 focus:bg-white/60 outline-none transition-all placeholder-gray-500 shadow-sm"></textarea>
-                            </div>
-
-                            <!-- No HP -->
-                            <div class="md:col-span-2">
-                                <label class="block text-sm font-medium text-white mb-1">No. HP / WhatsApp <span
-                                        class="text-red-500">*</span></label>
-                                <div class="relative">
-                                    <span
-                                        class="absolute inset-y-0 left-0 flex items-center pl-4 text-gray-600 bg-gray-100/50 border-r border-gray-400/60 px-3 rounded-l-lg backdrop-blur-sm">+62</span>
-                                    <input type="text" name="no_hp" x-model="editData.no_hp"
-                                        class="w-full pl-16 pr-4 py-2 bg-white/20 border border-gray-400/60 rounded-lg focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50 focus:bg-white/60 outline-none transition-all placeholder-gray-500 shadow-sm"
-                                        required>
-                                </div>
+                        <div class="md:col-span-2 bg-[#F5F5F4] border border-[#D6D3D1] p-4 rounded-[8px]">
+                            <label class="block text-[14px] font-semibold text-[#1C1917] mb-3">Jenis Kelamin</label>
+                            <div class="flex gap-6">
+                                <label class="inline-flex items-center cursor-pointer">
+                                    <input type="radio" name="jk" value="Laki-laki" class="w-5 h-5 border-[#D6D3D1] text-[#C2410C] focus:ring-[#C2410C]">
+                                    <span class="ml-3 text-[14px] font-semibold text-[#1C1917]">Laki-laki</span>
+                                </label>
+                                <label class="inline-flex items-center cursor-pointer">
+                                    <input type="radio" name="jk" value="Perempuan" class="w-5 h-5 border-[#D6D3D1] text-[#C2410C] focus:ring-[#C2410C]">
+                                    <span class="ml-3 text-[14px] font-semibold text-[#1C1917]">Perempuan</span>
+                                </label>
                             </div>
                         </div>
-                    </form>
-                </div>
 
-                <!-- Modal Footer -->
-                <div class="flex items-center justify-end p-5 md:p-6 border-t border-gray-100/50 gap-3 shrink-0">
-                    <button @click="isEditModalOpen = false" type="button"
-                        class="px-5 py-2.5 border border-gray-400/50 text-gray-700 bg-white/20 rounded-xl hover:bg-white/40 font-medium transition-all focus:outline-none focus:ring-2 focus:ring-gray-200 shadow-sm">
-                        Batal
-                    </button>
-                    <button type="submit" form="formEditAnggota"
-                        class="px-5 py-2.5 bg-blue-300 text-white rounded-xl hover:bg-blue-700 font-medium transition-colors shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 flex items-center gap-2">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-                        </svg>
-                        Perbarui Data
-                    </button>
-                </div>
+                        <div class="md:col-span-2">
+                            <label class="block text-[14px] font-semibold text-[#1C1917] mb-2">Alamat Lengkap</label>
+                            <textarea name="alamat" rows="2" placeholder="BLOK, RT/RW, DESA"
+                                class="w-full px-4 py-3 bg-[#F5F5F4] border border-[#D6D3D1] rounded-[8px] text-[#1C1917] text-[16px] placeholder-[#78716C] focus:outline-none focus:border-[#C2410C] focus:ring-[3px] focus:ring-[#C2410C]/15 transition-all"></textarea>
+                        </div>
+
+                        <div class="md:col-span-2">
+                            <label class="block text-[14px] font-semibold text-[#1C1917] mb-2">Telepon <span class="text-[#DC2626]">*</span></label>
+                            <input type="text" name="no_hp" placeholder="08123456789"
+                                class="w-full px-4 py-3 bg-[#F5F5F4] border border-[#D6D3D1] rounded-[8px] text-[#1C1917] text-[16px] placeholder-[#78716C] focus:outline-none focus:border-[#C2410C] focus:ring-[3px] focus:ring-[#C2410C]/15 transition-all" required>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Modal Footer -->
+            <div class="p-6 border-t border-[#D6D3D1] shrink-0 bg-[#FAFAF9] flex justify-end gap-3">
+                <button @click="isModalOpen = false" type="button"
+                    class="px-5 py-2.5 bg-transparent border border-[#D6D3D1] text-[#57534E] font-semibold rounded-[8px] hover:text-[#1C1917] hover:bg-[#F5F5F4] transition-colors">
+                    Batal
+                </button>
+                <button type="submit" form="formTambahAnggota"
+                    class="px-5 py-2.5 bg-[#C2410C] text-white font-semibold rounded-[8px] hover:bg-[#9A3412] transition-colors shadow-sm">
+                    Simpan Data
+                </button>
             </div>
         </div>
     </div>
 
-    @if(session('success') || $errors->any())
-        <script>
-            document.addEventListener('alpine:init', () => {
-                // Jika ada success/error message, modal otomatis terbuka kembali
-                Alpine.data('modalData', () => ({
-                    isModalOpen: true
-                }));
-            });
-        </script>
-    @endif
+    <!-- Edit Modal Background overlay -->
+    <div x-data="{ isEditModalOpen: false, editData: {}, submitUrl: '' }"
+        @open-edit.window="isEditModalOpen = true; editData = $event.detail; submitUrl = '{{ route('anggota.update', ':id') }}'.replace(':id', editData.id)"
+        x-show="isEditModalOpen" x-transition.opacity.duration.300ms
+        class="fixed inset-0 z-[70] bg-[#1C1917]/80 backdrop-blur-sm flex items-center justify-center p-4 sm:p-0"
+        style="display: none;">
+        
+        <div x-show="isEditModalOpen" @click.away="isEditModalOpen = false" x-transition:enter="ease-out duration-300"
+            x-transition:enter-start="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+            x-transition:enter-end="opacity-100 translate-y-0 sm:scale-100"
+            class="relative bg-[#FAFAF9] border border-[#D6D3D1] shadow-[0_24px_48px_rgba(28,25,23,0.12)] w-full max-w-2xl sm:mx-auto my-8 max-h-[90vh] flex flex-col overflow-hidden rounded-[12px]">
+            
+            <div class="p-6 border-b border-[#D6D3D1] shrink-0 bg-[#FAFAF9] relative">
+                <div class="flex items-center justify-between">
+                    <h3 class="text-2xl font-display font-bold text-[#1C1917]">Edit Anggota</h3>
+                    <button @click="isEditModalOpen = false" type="button"
+                        class="text-[#78716C] hover:text-[#1C1917] p-1 transition-colors">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
 
+            <div class="p-6 overflow-y-auto flex-1 bg-[#FAFAF9]">
+                <form :action="submitUrl" method="POST" id="formEditAnggota">
+                    @csrf
+                    @method('PUT')
+                    <!-- Formulir di dalam grid yang sama persis spt tambah, cuma pake x-model="editData.field" -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="md:col-span-2">
+                            <label class="block text-[14px] font-semibold text-[#1C1917] mb-2">NIK <span class="text-[#DC2626]">*</span></label>
+                            <input type="text" name="nik" x-model="editData.nik"
+                                class="w-full px-4 py-3 bg-[#F5F5F4] border border-[#D6D3D1] rounded-[8px] text-[#1C1917] text-[16px] focus:outline-none focus:border-[#C2410C] focus:ring-[3px] focus:ring-[#C2410C]/15 transition-all" required>
+                        </div>
+                        <div class="md:col-span-2">
+                            <label class="block text-[14px] font-semibold text-[#1C1917] mb-2">Nama <span class="text-[#DC2626]">*</span></label>
+                            <input type="text" name="nama" x-model="editData.nama"
+                                class="w-full px-4 py-3 bg-[#F5F5F4] border border-[#D6D3D1] rounded-[8px] text-[#1C1917] text-[16px] focus:outline-none focus:border-[#C2410C] focus:ring-[3px] focus:ring-[#C2410C]/15 transition-all" required>
+                        </div>
+                        <div>
+                            <label class="block text-[14px] font-semibold text-[#1C1917] mb-2">Tempat Lahir</label>
+                            <input type="text" name="tempat_lahir" x-model="editData.tempat_lahir"
+                                class="w-full px-4 py-3 bg-[#F5F5F4] border border-[#D6D3D1] rounded-[8px] text-[#1C1917] text-[16px] focus:outline-none focus:border-[#C2410C] focus:ring-[3px] focus:ring-[#C2410C]/15 transition-all">
+                        </div>
+                        <div>
+                            <label class="block text-[14px] font-semibold text-[#1C1917] mb-2">Tanggal Lahir</label>
+                            <input type="date" name="tanggal_lahir" x-model="editData.tanggal_lahir"
+                                class="w-full px-4 py-3 bg-[#F5F5F4] border border-[#D6D3D1] rounded-[8px] text-[#1C1917] text-[16px] focus:outline-none focus:border-[#C2410C] focus:ring-[3px] focus:ring-[#C2410C]/15 transition-all">
+                        </div>
+                        <div class="md:col-span-2 bg-[#F5F5F4] border border-[#D6D3D1] p-4 rounded-[8px]">
+                            <label class="block text-[14px] font-semibold text-[#1C1917] mb-3">Jenis Kelamin</label>
+                            <div class="flex gap-6">
+                                <label class="inline-flex items-center cursor-pointer">
+                                    <input type="radio" name="jk" value="Laki-laki" x-model="editData.jk" class="w-5 h-5 border-[#D6D3D1] text-[#C2410C] focus:ring-[#C2410C]">
+                                    <span class="ml-3 text-[14px] font-semibold text-[#1C1917]">Laki-laki</span>
+                                </label>
+                                <label class="inline-flex items-center cursor-pointer">
+                                    <input type="radio" name="jk" value="Perempuan" x-model="editData.jk" class="w-5 h-5 border-[#D6D3D1] text-[#C2410C] focus:ring-[#C2410C]">
+                                    <span class="ml-3 text-[14px] font-semibold text-[#1C1917]">Perempuan</span>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="md:col-span-2">
+                            <label class="block text-[14px] font-semibold text-[#1C1917] mb-2">Alamat Lengkap</label>
+                            <textarea name="alamat" rows="2" x-model="editData.alamat"
+                                class="w-full px-4 py-3 bg-[#F5F5F4] border border-[#D6D3D1] rounded-[8px] text-[#1C1917] text-[16px] focus:outline-none focus:border-[#C2410C] focus:ring-[3px] focus:ring-[#C2410C]/15 transition-all"></textarea>
+                        </div>
+                        <div class="md:col-span-2">
+                            <label class="block text-[14px] font-semibold text-[#1C1917] mb-2">Telepon <span class="text-[#DC2626]">*</span></label>
+                            <input type="text" name="no_hp" x-model="editData.no_hp"
+                                class="w-full px-4 py-3 bg-[#F5F5F4] border border-[#D6D3D1] rounded-[8px] text-[#1C1917] text-[16px] focus:outline-none focus:border-[#C2410C] focus:ring-[3px] focus:ring-[#C2410C]/15 transition-all" required>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Modal Footer -->
+            <div class="p-6 border-t border-[#D6D3D1] shrink-0 bg-[#FAFAF9] flex justify-end gap-3">
+                <button @click="isEditModalOpen = false" type="button"
+                    class="px-5 py-2.5 bg-transparent border border-[#D6D3D1] text-[#57534E] font-semibold rounded-[8px] hover:text-[#1C1917] hover:bg-[#F5F5F4] transition-colors">
+                    Batal
+                </button>
+                <button type="submit" form="formEditAnggota"
+                    class="px-5 py-2.5 bg-[#C2410C] text-white font-semibold rounded-[8px] hover:bg-[#9A3412] transition-colors shadow-sm">
+                    Perbarui Data
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@if(session('success') || $errors->any())
+    <script>
+        document.addEventListener('alpine:init', () => {
+            Alpine.data('modalData', () => ({
+                isModalOpen: true
+            }));
+        });
+    </script>
+@endif
 @endsection

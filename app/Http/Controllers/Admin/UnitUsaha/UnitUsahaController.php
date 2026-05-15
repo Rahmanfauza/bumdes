@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Admin\InputData;
+namespace App\Http\Controllers\Admin\UnitUsaha;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -11,7 +11,7 @@ class UnitUsahaController extends Controller
     public function index()
     {
         $unit_usahas = UnitUsaha::latest()->get();
-        return view('admin.input data.unitusaha', compact('unit_usahas'));
+        return view('admin.unitusaha.unitusaha', compact('unit_usahas'));
     }
 
     public function store(Request $request)

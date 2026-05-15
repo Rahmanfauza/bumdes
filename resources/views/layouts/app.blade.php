@@ -7,317 +7,297 @@
     <title>BUMDesGO</title>
     @stack('preload')
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Outfit', sans-serif !important; }
+        * { box-shadow: none !important; }
+        /* Scrollbar adjustment for a cleaner look horizontally */
+        ::-webkit-scrollbar { width: 10px; }
+        ::-webkit-scrollbar-track { background: #F3F4F6; }
+        ::-webkit-scrollbar-thumb { background: #111827; }
+    </style>
 </head>
 
-<body class="antialiased font-sans bg-gray-50 text-gray-900 overflow-x-hidden">
+<body class="antialiased bg-white text-[#111827] overflow-x-hidden">
 
     <!-- ====== HEADER ====== -->
     <header id="mainNav"
-        class="fixed top-0 left-0 w-full z-50 flex items-center justify-between px-6 lg:px-12 py-5 transition-all duration-300">
+        class="fixed top-0 left-0 w-full z-50 flex items-center justify-between px-4 sm:px-6 lg:px-12 py-3 sm:py-5 bg-white border-b-4 border-[#111827] transition-all duration-200">
 
         <!-- Logo -->
-        <a href="{{ url('/') }}" class="flex items-center gap-3">
-            <img src="{{ asset('Logo.png') }}" alt="Logo Bumdes Go" class="h-10 w-auto">
-            <span class="text-xl font-bold text-white tracking-wide">BUMDes <span class="text-blue-300">GO</span></span>
+        <a href="{{ url('/') }}" class="flex items-center gap-2 sm:gap-3 group">
+            <div class="bg-[#111827] text-white px-2 py-1 sm:p-2 rounded-md font-black text-lg sm:text-xl tracking-tighter group-hover:scale-105 transition-transform border-4 border-[#111827] group-hover:bg-white group-hover:text-[#111827]">
+                B<span class="text-[#F59E0B]">.</span>GO
+            </div>
+            <!-- Hide "BUMDes GO" completely on very small mobile, show on sm+ -->
+            <span class="text-lg sm:text-xl font-black text-[#111827] tracking-tighter hidden sm:block">BUMDes <span class="text-[#2563EB]">GO</span></span>
         </a>
 
         <!-- Desktop Nav Links -->
-        <nav class="hidden lg:flex items-center gap-2 text-white/90 text-sm font-medium">
+        <nav class="hidden lg:flex items-center gap-1 xl:gap-2 text-sm font-bold uppercase tracking-widest">
             @php
             $navLinks = [
-            ['url' => url('/'), 'label' => 'Beranda', 'active' => request()->is('/')],
-            ['url' => url('/berita'), 'label' => 'Berita', 'active' => request()->is('berita') ||
-            request()->is('berita/*')],
-            ['url' => url('/katalog'), 'label' => 'Katalog', 'active' => request()->is('katalog') ||
-            request()->is('katalog/*')],
-            ['url' => url('/profil'), 'label' => 'Profil', 'active' => request()->is('profil') ||
-            request()->is('profil/*')],
-            ['url' => url('/kontak'), 'label' => 'Kontak', 'active' => request()->is('kontak')],
+                ['url' => url('/'), 'label' => 'Beranda', 'active' => request()->is('/')],
+                ['url' => url('/berita'), 'label' => 'Berita', 'active' => request()->is('berita') || request()->is('berita/*')],
+                ['url' => url('/katalog'), 'label' => 'Katalog', 'active' => request()->is('katalog') || request()->is('katalog/*')],
+                ['url' => url('/profil'), 'label' => 'Profil', 'active' => request()->is('profil') || request()->is('profil/*')],
+                ['url' => url('/kontak'), 'label' => 'Kontak', 'active' => request()->is('kontak')],
             ];
             @endphp
             @foreach($navLinks as $link)
-            <a href="{{ $link['url'] }}" class="px-4 py-1.5 rounded-full transition-all duration-200
+            <a href="{{ $link['url'] }}" class="px-3 xl:px-4 py-2 rounded-md transition-all duration-200 border-4
                           {{ $link['active']
-                              ? 'bg-blue-500/30 text-blue-200 font-semibold'
-                              : 'hover:bg-blue-500/20 text-white/80 hover:text-blue-200' }}">
+                              ? 'bg-[#111827] text-white border-[#111827]'
+                              : 'border-transparent text-[#4B5563] hover:border-[#111827] hover:text-[#111827]' }}">
                 {{ $link['label'] }}
             </a>
             @endforeach
             <button id="loginBtn"
-                class="ml-4 bg-white text-gray-900 px-6 py-2 rounded-full font-bold hover:bg-gray-100 transition focus:outline-none">
-                Log in
+                class="ml-2 xl:ml-4 bg-[#F59E0B] text-[#111827] border-4 border-[#111827] px-4 xl:px-6 py-2 rounded-md font-black hover:bg-[#111827] hover:text-[#F59E0B] transition-colors focus:outline-none focus:ring-4 focus:ring-[#F59E0B]/50">
+                LOG IN
             </button>
         </nav>
 
         <!-- Mobile Hamburger -->
         <div class="lg:hidden flex items-center">
-            <button id="mobileMenuBtn" class="text-white focus:outline-none" aria-label="Toggle Menu">
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+            <button id="mobileMenuBtn" class="text-white focus:outline-none bg-[#111827] border-4 border-[#111827] p-1.5 sm:p-2 rounded-md hover:bg-white hover:text-[#111827] transition-colors" aria-label="Toggle Menu">
+                <svg class="w-6 h-6 sm:w-7 sm:h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="square" stroke-linejoin="miter" stroke-width="3" d="M4 6h16M4 12h16M4 18h16" />
                 </svg>
             </button>
         </div>
     </header>
 
     <!-- Mobile Nav Menu (hidden by default) -->
-    <div id="mobileMenu"
-        class="fixed top-0 left-0 w-full h-full z-40 bg-blue-900/95 backdrop-blur-md flex flex-col items-center justify-center gap-8 hidden">
-        <button id="closeMobileMenu" class="absolute top-6 right-6 text-white focus:outline-none">
-            <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-            </svg>
-        </button>
-        <a href="{{ url('/') }}"
-            class="text-2xl font-semibold transition-all px-6 py-2 rounded-full
-                  {{ request()->is('/') ? 'bg-white/20 text-white font-bold' : 'text-white/80 hover:text-white hover:bg-white/10' }}">
-            Beranda
-        </a>
-        <a href="{{ url('/berita') }}"
-            class="text-2xl font-semibold transition-all px-6 py-2 rounded-full
-                  {{ request()->is('berita') || request()->is('berita/*') ? 'bg-white/20 text-white font-bold' : 'text-white/80 hover:text-white hover:bg-white/10' }}">
-            Berita
-        </a>
-        <a href="{{ url('/katalog') }}"
-            class="text-2xl font-semibold transition-all px-6 py-2 rounded-full
-                  {{ request()->is('katalog') || request()->is('katalog/*') ? 'bg-white/20 text-white font-bold' : 'text-white/80 hover:text-white hover:bg-white/10' }}">
-            Katalog
-        </a>
-        <a href="{{ url('/profil') }}"
-            class="text-2xl font-semibold transition-all px-6 py-2 rounded-full
-                  {{ request()->is('profil') || request()->is('profil/*') ? 'bg-white/20 text-white font-bold' : 'text-white/80 hover:text-white hover:bg-white/10' }}">
-            Profil
-        </a>
-        <a href="{{ url('/kontak') }}"
-            class="text-2xl font-semibold transition-all px-6 py-2 rounded-full
-                  {{ request()->is('kontak') ? 'bg-white/20 text-white font-bold' : 'text-white/80 hover:text-white hover:bg-white/10' }}">
-            Kontak
-        </a>
-        <button id="mobileLoginBtn"
-            class="bg-white text-gray-900 px-8 py-3 rounded-full font-bold hover:bg-gray-100 transition focus:outline-none text-lg">
-            Log in
-        </button>
+    <div id="mobileMenu" class="fixed inset-0 z-[60] bg-[#2563EB] hidden overflow-y-auto">
+        <div class="min-h-screen py-10 px-4 flex flex-col items-center justify-center gap-4 sm:gap-6 relative">
+            <button id="closeMobileMenu" class="absolute top-4 sm:top-6 right-4 sm:right-6 text-white focus:outline-none bg-[#111827] border-4 border-[#111827] p-1.5 sm:p-2 rounded-md hover:bg-white hover:text-[#111827] transition-colors">
+                <svg class="w-7 h-7 sm:w-8 sm:h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="square" stroke-linejoin="miter" stroke-width="3" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+            </button>
+            <a href="{{ url('/') }}"
+                class="block w-full max-w-sm text-center text-xl sm:text-2xl font-black uppercase tracking-widest transition-all px-4 sm:px-8 py-3 sm:py-4 rounded-md border-4
+                    {{ request()->is('/') ? 'bg-white text-[#2563EB] border-white' : 'border-transparent text-white hover:border-white' }}">
+                Beranda
+            </a>
+            <a href="{{ url('/berita') }}"
+                class="block w-full max-w-sm text-center text-xl sm:text-2xl font-black uppercase tracking-widest transition-all px-4 sm:px-8 py-3 sm:py-4 rounded-md border-4
+                    {{ request()->is('berita') || request()->is('berita/*') ? 'bg-white text-[#2563EB] border-white' : 'border-transparent text-white hover:border-white' }}">
+                Berita
+            </a>
+            <a href="{{ url('/katalog') }}"
+                class="block w-full max-w-sm text-center text-xl sm:text-2xl font-black uppercase tracking-widest transition-all px-4 sm:px-8 py-3 sm:py-4 rounded-md border-4
+                    {{ request()->is('katalog') || request()->is('katalog/*') ? 'bg-white text-[#2563EB] border-white' : 'border-transparent text-white hover:border-white' }}">
+                Katalog
+            </a>
+            <a href="{{ url('/profil') }}"
+                class="block w-full max-w-sm text-center text-xl sm:text-2xl font-black uppercase tracking-widest transition-all px-4 sm:px-8 py-3 sm:py-4 rounded-md border-4
+                    {{ request()->is('profil') || request()->is('profil/*') ? 'bg-white text-[#2563EB] border-white' : 'border-transparent text-white hover:border-white' }}">
+                Profil
+            </a>
+            <a href="{{ url('/kontak') }}"
+                class="block w-full max-w-sm text-center text-xl sm:text-2xl font-black uppercase tracking-widest transition-all px-4 sm:px-8 py-3 sm:py-4 rounded-md border-4
+                    {{ request()->is('kontak') ? 'bg-white text-[#2563EB] border-white' : 'border-transparent text-white hover:border-white' }}">
+                Kontak
+            </a>
+            <button id="mobileLoginBtn"
+                class="w-full max-w-sm bg-[#F59E0B] text-[#111827] px-4 sm:px-10 py-4 sm:py-5 rounded-md font-black uppercase tracking-widest border-4 border-[#111827] hover:bg-[#111827] hover:text-[#F59E0B] transition-colors focus:outline-none text-xl sm:text-2xl mt-4">
+                Log in Sistem
+            </button>
+        </div>
     </div>
 
     <!-- ====== PAGE CONTENT ====== -->
-    @yield('content')
+    <main class="w-full flex-grow pt-[4.5rem]">
+        @yield('content')
+    </main>
 
     <!-- ====== LOGIN MODAL ====== -->
     <div id="loginModal"
-        class="fixed inset-0 z-50 flex items-center justify-center p-4 hidden opacity-0 transition-opacity duration-300">
-        <!-- Backdrop -->
-        <div id="loginBackdrop" class="absolute inset-0 bg-black/60 backdrop-blur-sm cursor-pointer"></div>
+        class="fixed inset-0 z-[70] flex items-center justify-center p-4 hidden opacity-0 transition-opacity duration-200">
+        <div id="loginBackdrop" class="absolute inset-0 bg-[#111827]/90 cursor-pointer"></div>
 
-        <!-- Modal Card -->
+        <!-- Responsive Modal Card Flat -->
         <div id="loginFormContainer"
-            class="relative z-10 w-full max-w-md bg-white/10 backdrop-blur-xl border border-white/20 rounded-3xl p-8 shadow-2xl transform scale-95 transition-transform duration-300">
+            class="relative z-10 w-full max-w-[95%] sm:max-w-md bg-white border-4 border-[#111827] rounded-xl p-6 sm:p-8 transform scale-95 transition-transform duration-200 overflow-y-auto max-h-[90vh]">
 
-            <!-- Close Button -->
             <button id="closeModalBtn"
-                class="absolute top-4 right-4 text-white/60 hover:text-white transition focus:outline-none">
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                class="absolute top-3 sm:top-4 right-3 sm:right-4 text-[#111827] hover:bg-[#F3F4F6] p-1 border-4 border-transparent hover:border-[#111827] rounded-md transition focus:outline-none">
+                <svg class="w-6 h-6 sm:w-8 sm:h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="square" stroke-linejoin="miter" stroke-width="3" d="M6 18L18 6M6 6l12 12" />
                 </svg>
             </button>
 
-            <div class="mb-8 text-center pt-2">
-                <h2 class="text-3xl font-bold text-white mb-2">Login</h2>
-                <p class="text-blue-100">Silahkan masukkan data anda untuk login.</p>
+            <div class="mb-6 sm:mb-8 text-center pt-2 sm:pt-4">
+                <h2 class="text-3xl sm:text-4xl font-black text-[#111827] uppercase tracking-tighter mb-2">Login</h2>
+                <div class="w-16 h-2 bg-[#2563EB] mx-auto mb-4"></div>
+                <p class="text-[#4B5563] font-bold text-sm sm:text-base">Akses area manajerial.</p>
             </div>
 
-            <form action="{{ url('/login') }}" method="POST" class="space-y-6">
+            <form action="{{ url('/login') }}" method="POST" class="space-y-4 sm:space-y-6">
                 @csrf
-                <!-- Username -->
                 <div>
-                    <label for="username" class="block text-sm font-medium text-blue-50 mb-2">Username</label>
-                    <div class="relative">
-                        <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                            <svg class="h-5 w-5 text-blue-200" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
-                                fill="currentColor">
-                                <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"
-                                    clip-rule="evenodd" />
-                            </svg>
-                        </div>
-                        <input type="text" name="username" id="username"
-                            class="block w-full pl-11 pr-4 py-3 border border-white/20 rounded-xl bg-white/10 text-white placeholder-blue-200 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400 sm:text-sm transition duration-150 ease-in-out"
-                            placeholder="Masukkan username anda" required>
-                    </div>
+                    <label for="username" class="block text-xs sm:text-sm font-bold text-[#111827] uppercase tracking-widest mb-1 sm:mb-2">Username</label>
+                    <input type="text" name="username" id="username"
+                        class="block w-full px-3 sm:px-4 py-3 sm:py-4 border-4 border-[#111827] rounded-md bg-[#F3F4F6] text-[#111827] font-bold placeholder-[#9CA3AF] focus:outline-none focus:bg-white focus:border-[#2563EB] transition-colors"
+                        placeholder="USERNAME" required>
                 </div>
 
-                <!-- Password -->
                 <div>
-                    <label for="password" class="block text-sm font-medium text-blue-50 mb-2">Password</label>
-                    <div class="relative">
-                        <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                            <svg class="h-5 w-5 text-blue-200" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
-                                fill="currentColor">
-                                <path fill-rule="evenodd"
-                                    d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z"
-                                    clip-rule="evenodd" />
-                            </svg>
-                        </div>
-                        <input type="password" name="password" id="password"
-                            class="block w-full pl-11 pr-4 py-3 border border-white/20 rounded-xl bg-white/10 text-white placeholder-blue-200 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400 sm:text-sm transition duration-150 ease-in-out"
-                            placeholder="Masukkan password anda" required>
-                    </div>
+                    <label for="password" class="block text-xs sm:text-sm font-bold text-[#111827] uppercase tracking-widest mb-1 sm:mb-2">Password</label>
+                    <input type="password" name="password" id="password"
+                        class="block w-full px-3 sm:px-4 py-3 sm:py-4 border-4 border-[#111827] rounded-md bg-[#F3F4F6] text-[#111827] font-bold placeholder-[#9CA3AF] focus:outline-none focus:bg-white focus:border-[#2563EB] transition-colors"
+                        placeholder="PASSWORD" required>
                 </div>
 
-                <!-- Remember Me & Forgot Password -->
                 <div class="flex items-center justify-between">
-                    <div class="flex items-center">
+                    <div class="flex items-center gap-2">
                         <input id="remember-me" name="remember-me" type="checkbox"
-                            class="h-4 w-4 text-blue-500 focus:ring-blue-400 border-white/30 rounded bg-white/10">
-                        <label for="remember-me" class="ml-2 block text-sm text-blue-100 cursor-pointer">
-                            Ingat saya
+                            class="h-5 w-5 border-4 border-[#111827] rounded-sm bg-white cursor-pointer appearance-none checked:bg-[#2563EB]">
+                        <label for="remember-me" class="block text-sm font-bold text-[#111827] cursor-pointer">
+                            Ingat Saya
                         </label>
                     </div>
-                    <div class="text-sm">
-                        <a href="#" class="font-medium text-blue-300 hover:text-blue-100 transition duration-150">
-                            Lupa password?
-                        </a>
-                    </div>
                 </div>
 
-                <!-- Submit -->
                 <div>
                     <button type="submit"
-                        class="w-full flex justify-center py-3 px-4 rounded-xl shadow-sm text-sm font-bold text-blue-900 bg-blue-100 hover:bg-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-300 focus:ring-offset-transparent transition duration-200 ease-in-out hover:-translate-y-0.5 transform">
-                        Masuk
+                        class="w-full flex justify-center py-4 px-4 rounded-md text-sm sm:text-base font-black uppercase tracking-widest text-[#111827] bg-[#F59E0B] border-4 border-[#111827] hover:bg-[#111827] hover:text-[#F59E0B] transition-colors shadow-[4px_4px_0_0_#111827] hover:shadow-none hover:translate-x-1 hover:translate-y-1">
+                        MASUK SISTEM
                     </button>
                 </div>
             </form>
 
-            <div class="mt-8 text-center">
-                <p class="text-sm text-blue-100 border-t border-white/20 pt-6">
-                    Belum punya akun?
-                    <a href="#" class="font-medium text-white hover:text-blue-200 transition duration-150">Daftar</a>
-                </p>
+            <div class="mt-6 sm:mt-8 text-center border-t-4 border-[#111827] pt-4 sm:pt-6">
+                <button type="button" id="openRegisterFromLoginBtn" class="font-bold text-[#2563EB] hover:text-[#111827] transition-colors uppercase tracking-widest text-sm">Ganti ke Pendaftaran</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ====== REGISTER MODAL ====== -->
+    <div id="registerModal"
+        class="fixed inset-0 z-[70] flex items-center justify-center p-4 hidden opacity-0 transition-opacity duration-200">
+        <div id="registerBackdrop" class="absolute inset-0 bg-[#111827]/90 cursor-pointer"></div>
+
+        <!-- Responsive Modal Card Flat -->
+        <div id="registerFormContainer"
+             class="relative z-10 w-full max-w-[95%] sm:max-w-md bg-white border-4 border-[#111827] rounded-xl p-6 sm:p-8 transform scale-95 transition-transform duration-200 overflow-y-auto max-h-[90vh]">
+
+            <button id="closeRegisterModalBtn"
+                 class="absolute top-3 sm:top-4 right-3 sm:right-4 text-[#111827] hover:bg-[#F3F4F6] p-1 border-4 border-transparent hover:border-[#111827] rounded-md transition focus:outline-none">
+                <svg class="w-6 h-6 sm:w-8 sm:h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="square" stroke-linejoin="miter" stroke-width="3" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+            </button>
+
+            <div class="mb-6 sm:mb-8 text-center pt-2 sm:pt-4">
+                <h2 class="text-3xl sm:text-4xl font-black text-[#111827] uppercase tracking-tighter mb-2">Daftar</h2>
+                 <div class="w-16 h-2 bg-[#10B981] mx-auto mb-4"></div>
+                <p class="text-[#4B5563] font-bold text-sm sm:text-base">Registrasi akses awal.</p>
+            </div>
+
+            <form action="{{ url('/register') }}" method="POST" class="space-y-4 sm:space-y-5">
+                @csrf
+                <div>
+                    <label for="reg_name" class="block text-xs sm:text-sm font-bold text-[#111827] uppercase tracking-widest mb-1">Username</label>
+                    <input type="text" name="name" id="reg_name"
+                           class="block w-full px-3 sm:px-4 py-3 sm:py-4 border-4 border-[#111827] rounded-md bg-[#F3F4F6] text-[#111827] font-bold placeholder-[#9CA3AF] focus:outline-none focus:bg-white focus:border-[#10B981] transition-colors"
+                        placeholder="USERNAME BARU" required>
+                </div>
+
+                <div>
+                    <label for="reg_email" class="block text-xs sm:text-sm font-bold text-[#111827] uppercase tracking-widest mb-1">Email</label>
+                    <input type="email" name="email" id="reg_email"
+                           class="block w-full px-3 sm:px-4 py-3 sm:py-4 border-4 border-[#111827] rounded-md bg-[#F3F4F6] text-[#111827] font-bold placeholder-[#9CA3AF] focus:outline-none focus:bg-white focus:border-[#10B981] transition-colors"
+                        placeholder="ALAMAT EMAIL" required>
+                </div>
+
+                <div>
+                    <label for="reg_password" class="block text-xs sm:text-sm font-bold text-[#111827] uppercase tracking-widest mb-1">Password</label>
+                     <input type="password" name="password" id="reg_password"
+                            class="block w-full px-3 sm:px-4 py-3 sm:py-4 border-4 border-[#111827] rounded-md bg-[#F3F4F6] text-[#111827] font-bold placeholder-[#9CA3AF] focus:outline-none focus:bg-white focus:border-[#10B981] transition-colors"
+                        placeholder="PASSWORD BARU" required>
+                </div>
+
+                <div class="pt-2">
+                    <button type="submit"
+                        class="w-full flex justify-center py-4 px-4 rounded-md text-sm sm:text-base font-black uppercase tracking-widest text-[#111827] bg-[#10B981] border-4 border-[#111827] hover:bg-[#111827] hover:text-[#10B981] transition-colors shadow-[4px_4px_0_0_#111827] hover:shadow-none hover:translate-x-1 hover:translate-y-1">
+                        BUAT AKUN
+                    </button>
+                </div>
+            </form>
+
+            <div class="mt-6 sm:mt-8 text-center border-t-4 border-[#111827] pt-4 sm:pt-6">
+                 <button type="button" id="openLoginFromRegisterBtn" class="font-bold text-[#10B981] hover:text-[#111827] transition-colors uppercase tracking-widest text-sm">Kembali ke Login</button>
             </div>
         </div>
     </div>
 
     <!-- ====== FOOTER ====== -->
-    <footer class="bg-gray-900 text-white pt-20 pb-10 relative z-20">
-        <div class="mx-auto max-w-7xl px-6 lg:px-8">
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-16">
+    <footer class="bg-[#111827] text-white pt-20 sm:pt-24 pb-8 sm:pb-12 border-t-8 border-[#F59E0B] relative z-20 overflow-hidden">
+        <div class="absolute top-0 right-0 w-64 h-64 sm:w-96 sm:h-96 border-8 border-white/10 rounded-full translate-x-1/3 -translate-y-1/3 pointer-events-none"></div>
+
+        <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-12 relative z-10">
+            <div class="grid grid-cols-1 gap-12 sm:grid-cols-2 lg:grid-cols-4 sm:gap-10 lg:gap-12 mb-12 sm:mb-16">
 
                 <!-- Tentang BUMDes -->
-                <div class="col-span-1 md:col-span-2 lg:col-span-1">
+                <div class="col-span-1 sm:col-span-2 lg:col-span-1">
                     <div class="flex items-center gap-3 mb-6">
-                        <img src="{{ asset('Logo.png') }}" alt="Logo Bumdes Go" class="h-10 w-auto">
-                        <h2 class="text-xl font-bold tracking-wide">BUMDes <span class="text-blue-400">GO</span></h2>
+                         <div class="bg-white text-[#111827] px-2 py-1 rounded-md font-black tracking-tighter text-lg border-2 border-white">
+                            B<span class="text-[#F59E0B]">.</span>GO
+                        </div>
+                        <h2 class="text-xl sm:text-2xl font-black tracking-tighter uppercase">BUMDes <span class="text-[#2563EB]">GO</span></h2>
                     </div>
-                    <p class="text-gray-400 text-sm leading-relaxed mb-6">
-                        BUMDes Sinar Jaya Digital Solusi hadir untuk memajukan perekonomian Desa Sinulasi melalui
-                        pemanfaatan teknologi digital berkelanjutan dan pemberdayaan masyarakat lokal.
+                    <p class="text-gray-300 font-bold leading-relaxed mb-6 text-sm sm:text-base">
+                        Sinar Jaya Digital Solusi. Pemanfaatan teknologi bergaris keras untuk menopang mesin ekonomi struktural independen desa.
                     </p>
-                    <!-- Social Media -->
-                    <div class="flex space-x-4">
-                        <a href="#"
-                            class="text-gray-400 hover:text-white transition-colors bg-white/5 p-2 rounded-full hover:bg-blue-600">
-                            <span class="sr-only">Facebook</span>
-                            <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                                <path fill-rule="evenodd"
-                                    d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12z"
-                                    clip-rule="evenodd" />
-                            </svg>
-                        </a>
-                        <a href="#"
-                            class="text-gray-400 hover:text-white transition-colors bg-white/5 p-2 rounded-full hover:bg-pink-600">
-                            <span class="sr-only">Instagram</span>
-                            <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                                <path fill-rule="evenodd"
-                                    d="M12.315 2c2.43 0 2.784.013 3.808.06 1.064.049 1.791.218 2.427.465a4.902 4.902 0 011.772 1.153 4.902 4.902 0 011.153 1.772c.247.636.416 1.363.465 2.427.048 1.067.06 1.407.06 4.123v.08c0 2.643-.012 2.987-.06 4.043-.049 1.064-.218 1.791-.465 2.427a4.902 4.902 0 01-1.153 1.772 4.902 4.902 0 01-1.772 1.153c-.636.247-1.363.416-2.427.465-1.067.048-1.407.06-4.123.06h-.08c-2.643 0-2.987-.012-4.043-.06-1.064-.049-1.791-.218-2.427-.465a4.902 4.902 0 01-1.772-1.153 4.902 4.902 0 01-1.153-1.772c-.247-.636-.416-1.363-.465-2.427-.047-1.024-.06-1.379-.06-3.808v-.63c0-2.43.013-2.784.06-3.808.049-1.064.218-1.791.465-2.427a4.902 4.902 0 011.153-1.772A4.902 4.902 0 015.45 2.525c.636-.247 1.363-.416 2.427-.465C8.901 2.013 9.256 2 11.685 2h.63zm-.081 1.802h-.468c-2.456 0-2.784.011-3.807.058-.975.045-1.504.207-1.857.344-.467.182-.8.398-1.15.748-.35.35-.566.683-.748 1.15-.137.353-.3.882-.344 1.857-.047 1.023-.058 1.351-.058 3.807v.468c0 2.456.011 2.784.058 3.807.045.975.207 1.504.344 1.857.182.466.399.8.748 1.15.35.35.683.566 1.15.748.353.137.882.3 1.857.344 1.054.048 1.37.058 4.041.058h.08c2.597 0 2.917-.01 3.96-.058.976-.045 1.505-.207 1.858-.344.466-.182.8-.398 1.15-.748.35-.35.566-.683.748-1.15.137-.353.3-.882.344-1.857.048-1.055.058-1.37.058-4.041v-.08c0-2.597-.01-2.917-.058-3.96-.045-.976-.207-1.505-.344-1.858a3.097 3.097 0 00-.748-1.15 3.098 3.098 0 00-1.15-.748c-.353-.137-.882-.3-1.857-.344-1.023-.047-1.351-.058-3.807-.058zM12 6.865a5.135 5.135 0 110 10.27 5.135 5.135 0 010-10.27zm0 1.802a3.333 3.333 0 100 6.666 3.333 3.333 0 000-6.666zm5.338-3.205a1.2 1.2 0 110 2.4 1.2 1.2 0 010-2.4z"
-                                    clip-rule="evenodd" />
-                            </svg>
-                        </a>
-                        <a href="#"
-                            class="text-gray-400 hover:text-white transition-colors bg-white/5 p-2 rounded-full hover:bg-sky-500">
-                            <span class="sr-only">Twitter / X</span>
-                            <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                                <path
-                                    d="M8.29 20.251c7.547 0 11.675-6.253 11.675-11.675 0-.178 0-.355-.012-.53A8.348 8.348 0 0022 5.92a8.19 8.19 0 01-2.357.646 4.118 4.118 0 001.804-2.27 8.224 8.224 0 01-2.605.996 4.107 4.107 0 00-6.993 3.743 11.65 11.65 0 01-8.457-4.287 4.106 4.106 0 001.27 5.477A4.072 4.072 0 012.8 9.713v.052a4.105 4.105 0 003.292 4.022 4.095 4.095 0 01-1.853.07 4.108 4.108 0 003.834 2.85A8.233 8.233 0 012 18.407a11.616 11.616 0 006.29 1.84" />
-                            </svg>
-                        </a>
-                    </div>
                 </div>
 
                 <!-- Tautan Cepat -->
                 <div>
-                    <h3 class="text-white font-bold mb-6 uppercase tracking-wider text-sm">Tautan Cepat</h3>
-                    <ul class="space-y-4">
-                        <li><a href="{{ url('/') }}"
-                                class="text-gray-400 hover:text-blue-400 transition-colors text-sm">Beranda</a></li>
-                        <li><a href="{{ url('/berita') }}"
-                                class="text-gray-400 hover:text-blue-400 transition-colors text-sm">Berita &amp;
-                                Pengumuman</a></li>
-                        <li><a href="{{ url('/katalog') }}"
-                                class="text-gray-400 hover:text-blue-400 transition-colors text-sm">Katalog
-                                Produk</a></li>
-                        <li><a href="{{ url('/profil') }}"
-                                class="text-gray-400 hover:text-blue-400 transition-colors text-sm">Profil
-                                BUMDes</a></li>
-                        <li><a href="#" class="text-gray-400 hover:text-blue-400 transition-colors text-sm">Galeri
-                                Kegiatan</a></li>
+                    <h3 class="bg-white text-[#111827] font-black mb-6 uppercase tracking-widest text-sm inline-block px-3 py-1.5 rounded border-2 border-white">Tautan Pusat</h3>
+                    <ul class="space-y-3 sm:space-y-4">
+                        <li><a href="{{ url('/') }}" class="text-gray-300 font-bold hover:text-white hover:bg-[#2563EB] inline-block px-2 py-1 -ml-2 transition-colors rounded">Beranda</a></li>
+                        <li><a href="{{ url('/berita') }}" class="text-gray-300 font-bold hover:text-white hover:bg-[#2563EB] inline-block px-2 py-1 -ml-2 transition-colors rounded">Berita Daerah</a></li>
+                        <li><a href="{{ url('/katalog') }}" class="text-gray-300 font-bold hover:text-white hover:bg-[#2563EB] inline-block px-2 py-1 -ml-2 transition-colors rounded">Inventaris Katalog</a></li>
+                        <li><a href="{{ url('/profil') }}" class="text-gray-300 font-bold hover:text-white hover:bg-[#2563EB] inline-block px-2 py-1 -ml-2 transition-colors rounded">Profil Entitas</a></li>
                     </ul>
                 </div>
 
                 <!-- Layanan -->
                 <div>
-                    <h3 class="text-white font-bold mb-6 uppercase tracking-wider text-sm">Layanan</h3>
-                    <ul class="space-y-4">
-                        <li><a href="#" class="text-gray-400 hover:text-blue-400 transition-colors text-sm">Mitra
-                                Desa</a></li>
-                        <li><a href="#" class="text-gray-400 hover:text-blue-400 transition-colors text-sm">Lapak
-                                UMKM</a></li>
-                        <li><a href="#" class="text-gray-400 hover:text-blue-400 transition-colors text-sm">Penyewaan
-                                Alat</a></li>
-                        <li><a href="#" class="text-gray-400 hover:text-blue-400 transition-colors text-sm">Simpan
-                                Pinjam</a></li>
+                    <h3 class="bg-white text-[#111827] font-black mb-6 uppercase tracking-widest text-sm inline-block px-3 py-1.5 rounded border-2 border-white">Sektor Usaha</h3>
+                    <ul class="space-y-3 sm:space-y-4">
+                        <li><a href="#" class="text-gray-300 font-bold hover:text-[#111827] hover:bg-[#10B981] inline-block px-2 py-1 -ml-2 transition-colors rounded">Manufaktur Mitra</a></li>
+                        <li><a href="#" class="text-gray-300 font-bold hover:text-[#111827] hover:bg-[#10B981] inline-block px-2 py-1 -ml-2 transition-colors rounded">Akomodasi UMKM</a></li>
+                        <li><a href="#" class="text-gray-300 font-bold hover:text-[#111827] hover:bg-[#10B981] inline-block px-2 py-1 -ml-2 transition-colors rounded">Pengadaan Alat</a></li>
+                        <li><a href="#" class="text-gray-300 font-bold hover:text-[#111827] hover:bg-[#10B981] inline-block px-2 py-1 -ml-2 transition-colors rounded">Sirkuit Modal</a></li>
                     </ul>
                 </div>
 
                 <!-- Kontak -->
                 <div>
-                    <h3 class="text-white font-bold mb-6 uppercase tracking-wider text-sm">Hubungi Kami</h3>
-                    <ul class="space-y-4 text-sm text-gray-400">
-                        <li class="flex items-start gap-3">
-                            <svg class="h-5 w-5 text-blue-500 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24"
-                                stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                            </svg>
-                            <span>Kantor Kepala Desa Sinulasi, Kec. Maju Bersama, Kab. Sinar Jaya, Kode Pos 12345</span>
+                    <h3 class="bg-white text-[#111827] font-black mb-6 uppercase tracking-widest text-sm inline-block px-3 py-1.5 rounded border-2 border-white">Pangkalan</h3>
+                    <ul class="space-y-4 text-gray-300 font-bold text-sm sm:text-base">
+                        <li class="flex items-start gap-4">
+                            <div class="bg-[#F59E0B] w-3 h-3 border border-[#F59E0B] mt-1.5 flex-shrink-0"></div>
+                            <span>Pusat Tata Kelola. Gedung A1 Sinar Jaya.</span>
                         </li>
-                        <li class="flex items-center gap-3">
-                            <svg class="h-5 w-5 text-blue-500 flex-shrink-0" fill="none" viewBox="0 0 24 24"
-                                stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
-                            </svg>
+                        <li class="flex items-start gap-4">
+                            <div class="bg-[#10B981] w-3 h-3 border border-[#10B981] mt-1.5 flex-shrink-0"></div>
                             <span>(021) 1234-5678</span>
-                        </li>
-                        <li class="flex items-center gap-3">
-                            <svg class="h-5 w-5 text-blue-500 flex-shrink-0" fill="none" viewBox="0 0 24 24"
-                                stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                            </svg>
-                            <span>halo@bumdesgodigitalsolusi.id</span>
                         </li>
                     </ul>
                 </div>
-
             </div>
 
             <!-- Footer Bottom Bar -->
-            <div
-                class="border-t border-gray-800 pt-8 flex flex-col md:flex-row justify-between items-center text-sm text-gray-500 gap-4">
-                <p>&copy; 2026 BUMDes Go Digital Solusi. Hak cipta dilindungi undang-undang.</p>
+            <div class="border-t-4 border-gray-700 pt-6 sm:pt-8 flex flex-col md:flex-row justify-between items-center text-xs sm:text-sm font-black text-gray-400 gap-4">
+                <p class="text-center md:text-left">&copy; 2026 BUMDES GO. SISTEM DILINDUNGI TATA KELOLA.</p>
                 <div class="flex space-x-6">
-                    <a href="#" class="hover:text-blue-400 transition-colors">Syarat &amp; Ketentuan</a>
-                    <a href="#" class="hover:text-blue-400 transition-colors">Kebijakan Privasi</a>
+                    <a href="#" class="hover:text-white transition-colors uppercase tracking-widest">Syarat</a>
+                    <a href="#" class="hover:text-white transition-colors uppercase tracking-widest">Privasi</a>
                 </div>
             </div>
         </div>
@@ -326,7 +306,7 @@
     <!-- ====== SCRIPTS ====== -->
     <script>
     document.addEventListener('DOMContentLoaded', () => {
-        // ----- Login Modal -----
+        // ----- Login & Register Modals -----
         const loginBtn = document.getElementById('loginBtn');
         const mobileLoginBtn = document.getElementById('mobileLoginBtn');
         const loginModal = document.getElementById('loginModal');
@@ -334,9 +314,19 @@
         const loginBackdrop = document.getElementById('loginBackdrop');
         const loginFormContainer = document.getElementById('loginFormContainer');
 
-        const openModal = (e) => {
+        const registerModal = document.getElementById('registerModal');
+        const closeRegisterModalBtn = document.getElementById('closeRegisterModalBtn');
+        const registerBackdrop = document.getElementById('registerBackdrop');
+        const registerFormContainer = document.getElementById('registerFormContainer');
+        
+        const openRegisterFromLoginBtn = document.getElementById('openRegisterFromLoginBtn');
+        const openLoginFromRegisterBtn = document.getElementById('openLoginFromRegisterBtn');
+
+        const openLoginModal = (e) => {
             if (e) e.preventDefault();
+            closeRegisterModal();
             loginModal.classList.remove('hidden');
+            document.body.style.overflow = 'hidden'; 
             setTimeout(() => {
                 loginModal.classList.remove('opacity-0');
                 loginFormContainer.classList.remove('scale-95');
@@ -344,50 +334,91 @@
             }, 10);
         };
 
-        const closeModal = () => {
+        const closeLoginModal = () => {
             loginModal.classList.add('opacity-0');
             loginFormContainer.classList.remove('scale-100');
             loginFormContainer.classList.add('scale-95');
-            setTimeout(() => loginModal.classList.add('hidden'), 300);
+            document.body.style.overflow = '';
+            setTimeout(() => loginModal.classList.add('hidden'), 200);
         };
 
-        if (loginBtn) loginBtn.addEventListener('click', openModal);
-        if (mobileLoginBtn) mobileLoginBtn.addEventListener('click', openModal);
-        if (closeModalBtn) closeModalBtn.addEventListener('click', closeModal);
-        if (loginBackdrop) loginBackdrop.addEventListener('click', closeModal);
+        const openRegisterModal = (e) => {
+            if (e) e.preventDefault();
+            closeLoginModal();
+            registerModal.classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+            setTimeout(() => {
+                registerModal.classList.remove('opacity-0');
+                registerFormContainer.classList.remove('scale-95');
+                registerFormContainer.classList.add('scale-100');
+            }, 10);
+        };
+
+        const closeRegisterModal = () => {
+            registerModal.classList.add('opacity-0');
+            registerFormContainer.classList.remove('scale-100');
+            registerFormContainer.classList.add('scale-95');
+            document.body.style.overflow = '';
+            setTimeout(() => registerModal.classList.add('hidden'), 200);
+        };
+
+        if (loginBtn) loginBtn.addEventListener('click', openLoginModal);
+        if (mobileLoginBtn) mobileLoginBtn.addEventListener('click', openLoginModal);
+        
+        [closeModalBtn, loginBackdrop].forEach(el => el && el.addEventListener('click', closeLoginModal));
+        [closeRegisterModalBtn, registerBackdrop].forEach(el => el && el.addEventListener('click', closeRegisterModal));
+
+        if (openRegisterFromLoginBtn) openRegisterFromLoginBtn.addEventListener('click', openRegisterModal);
+        if (openLoginFromRegisterBtn) openLoginFromRegisterBtn.addEventListener('click', openLoginModal);
 
         document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape' && !loginModal.classList.contains('hidden')) closeModal();
+            if (e.key === 'Escape') {
+                if (!loginModal.classList.contains('hidden')) closeLoginModal();
+                if (!registerModal.classList.contains('hidden')) closeRegisterModal();
+            }
         });
 
-        // ----- Mobile Menu -----
+        // ----- Mobile Menu Management -----
         const mobileMenuBtn = document.getElementById('mobileMenuBtn');
         const closeMobileMenu = document.getElementById('closeMobileMenu');
         const mobileMenu = document.getElementById('mobileMenu');
 
-        if (mobileMenuBtn) mobileMenuBtn.addEventListener('click', () => mobileMenu.classList.remove('hidden'));
-        if (closeMobileMenu) closeMobileMenu.addEventListener('click', () => mobileMenu.classList.add(
-            'hidden'));
+        if (mobileMenuBtn) {
+            mobileMenuBtn.addEventListener('click', () => {
+                mobileMenu.classList.remove('hidden');
+                document.body.style.overflow = 'hidden';
+            });
+        }
+        if (closeMobileMenu) {
+            closeMobileMenu.addEventListener('click', () => {
+                mobileMenu.classList.add('hidden');
+                document.body.style.overflow = '';
+            });
+        }
 
-        // Close mobile menu when a link is clicked
         mobileMenu.querySelectorAll('a').forEach(link => {
-            link.addEventListener('click', () => mobileMenu.classList.add('hidden'));
+            link.addEventListener('click', () => {
+                mobileMenu.classList.add('hidden');
+                document.body.style.overflow = '';
+            });
         });
 
-        // ----- Navbar Scroll Effect -----
+        // ----- Flat Navbar Scroll Behavior -----
         const mainNav = document.getElementById('mainNav');
+        let lastScrollY = window.scrollY;
+
         window.addEventListener('scroll', () => {
             if (window.scrollY > 50) {
-                mainNav.classList.add('bg-blue-900/80', 'backdrop-blur-md', 'shadow-lg', 'py-3');
-                mainNav.classList.remove('py-5');
+                // When scrolled down, minimize padding slightly to save screen estate
+                mainNav.classList.remove('py-3', 'sm:py-5');
+                mainNav.classList.add('py-2', 'sm:py-3');
             } else {
-                mainNav.classList.remove('bg-blue-900/80', 'backdrop-blur-md', 'shadow-lg', 'py-3');
-                mainNav.classList.add('py-5');
+                mainNav.classList.add('py-3', 'sm:py-5');
+                mainNav.classList.remove('py-2', 'sm:py-3');
             }
+            lastScrollY = window.scrollY;
         });
     });
     </script>
-
 </body>
-
 </html>

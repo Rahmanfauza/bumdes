@@ -9,6 +9,7 @@ class Transaksi extends Model
 {
     protected $fillable = [
         'unit_usaha_id',
+        'pelanggan_id',
         'tanggal_transaksi',
         'jenis_transaksi',
         'jumlah',
@@ -18,5 +19,10 @@ class Transaksi extends Model
     public function unitUsaha()
     {
         return $this->belongsTo(UnitUsaha::class);
+    }
+
+    public function pelanggan()
+    {
+        return $this->belongsTo(Pelanggan::class);
     }
 }

@@ -4,17 +4,12 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class UnitUsaha extends Model
+class Pelanggan extends Model
 {
     protected $guarded = ['id'];
 
     public function transaksis()
     {
         return $this->hasMany(Transaksi::class);
-    }
-
-    public function produkJasas()
-    {
-        return $this->hasMany(ProdukJasa::class);
     }
 }
