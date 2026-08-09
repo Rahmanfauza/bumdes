@@ -59,7 +59,7 @@ CREATE TABLE `anggotas` (
   `jk` enum('Laki-laki','Perempuan') DEFAULT NULL,
   `alamat` text DEFAULT NULL,
   `no_hp` varchar(15) DEFAULT NULL,
-  `tanggal_bergabung` date NOT NULL DEFAULT curdate(),
+  `tanggal_bergabung` date NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;

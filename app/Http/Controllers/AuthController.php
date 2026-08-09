@@ -5,62 +5,71 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Hash;
-use App\Models\User;
+use App\Models\Pelanggan;
 
 class AuthController extends Controller
 {
     public function login(Request $request)
     {
         $request->validate([
-            'username' => 'required',
-            'password' => 'required',
+            'username' => 'required|string',
+            'password' => 'required|string',
         ]);
 
-        $username = $request->input('username');
+        $username = trim($request->input('username'));
         $password = $request->input('password');
 
-        $user = User::where('name', $username)->first();
+        // Cek apakah login menggunakan nama atau email
+        $pelanggan = Pelanggan::where('nama', $username)
+                              ->orWhere('email', $username)
+                              ->first();
 
         // Cek kecocokan data dengan database
-        if ($user && Hash::check($password, $user->password)) {
+        if ($pelanggan && Hash::check($password, $pelanggan->password)) {
             // Set session login sukses
-            Session::put('logged_in', true);
-            Session::put('username', $username);
+            Session::put('pelanggan_logged_in', true);
+            Session::put('pelanggan_id', $pelanggan->id_pelanggan);
+            Session::put('pelanggan_nama', $pelanggan->nama);
+            Session::put('pelanggan_email', $pelanggan->email);
 
-            return redirect('/admin/dashboard');
+            return redirect()->back()->with('success', 'Selamat datang kembali, ' . $pelanggan->nama . '!');
         }
 
-        // Jika salah, kembali ke halaman asal (/) dengan error
-        return back()->withErrors(['error' => 'Username atau password salah.']);
+        // Jika salah, kembali ke halaman asal dengan error
+        return back()->withErrors(['auth_error' => 'Username/Email atau password tidak sesuai.'])->withInput();
     }
 
     public function register(Request $request)
     {
         $request->validate([
-            'name' => 'required|string|max:255|unique:users,name',
-            'email' => 'required|string|email|max:255|unique:users,email',
+            'nama' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:pelanggans,email',
+            'no_hp' => 'nullable|string|max:20',
+            'alamat' => 'nullable|string',
             'password' => 'required|string|min:4',
         ]);
 
-        $user = User::create([
-            'name' => $request->input('name'),
+        $pelanggan = Pelanggan::create([
+            'nama' => $request->input('nama'),
             'email' => $request->input('email'),
+            'no_hp' => $request->input('no_hp'),
+            'alamat' => $request->input('alamat'),
             'password' => Hash::make($request->input('password')),
+            'status' => 'aktif',
         ]);
 
         // Auto login setelah sukses registrasi
-        Session::put('logged_in', true);
-        Session::put('username', $user->name);
+        Session::put('pelanggan_logged_in', true);
+        Session::put('pelanggan_id', $pelanggan->id_pelanggan);
+        Session::put('pelanggan_nama', $pelanggan->nama);
+        Session::put('pelanggan_email', $pelanggan->email);
 
-        return redirect('/admin/dashboard');
+        return redirect()->back()->with('success', 'Pendaftaran akun berhasil! Selamat berbelanja di BUMDesGO.');
     }
 
     public function logout()
     {
-        // Hapus session dan arahkan ke beranda (welcome)
-        Session::forget('logged_in');
-        Session::forget('username');
-
-        return redirect('/')->with('success', 'Berhasil logout.');
+        Session::forget(['pelanggan_logged_in', 'pelanggan_id', 'pelanggan_nama', 'pelanggan_email']);
+        return redirect('/')->with('success', 'Anda telah berhasil keluar dari akun pembeli.');
     }
 }

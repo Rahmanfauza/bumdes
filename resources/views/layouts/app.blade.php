@@ -43,6 +43,13 @@
                 ['url' => url('/profil'), 'label' => 'Profil', 'active' => request()->is('profil') || request()->is('profil/*')],
                 ['url' => url('/kontak'), 'label' => 'Kontak', 'active' => request()->is('kontak')],
             ];
+
+            $isPelanggan = Session::has('pelanggan_logged_in') && Session::get('pelanggan_id');
+            $cartCount = 0;
+            if ($isPelanggan) {
+                $userCart = \App\Models\Keranjang::withCount('detail')->where('id_pelanggan', Session::get('pelanggan_id'))->first();
+                $cartCount = $userCart ? $userCart->detail_count : 0;
+            }
             @endphp
             @foreach($navLinks as $link)
             <a href="{{ $link['url'] }}" class="px-3 xl:px-4 py-2 rounded-md transition-all duration-200 border-4
@@ -52,10 +59,41 @@
                 {{ $link['label'] }}
             </a>
             @endforeach
-            <button id="loginBtn"
-                class="ml-2 xl:ml-4 bg-[#F59E0B] text-[#111827] border-4 border-[#111827] px-4 xl:px-6 py-2 rounded-md font-black hover:bg-[#111827] hover:text-[#F59E0B] transition-colors focus:outline-none focus:ring-4 focus:ring-[#F59E0B]/50">
-                LOG IN
-            </button>
+
+            @if($isPelanggan)
+                <!-- Cart Link with Badge -->
+                <a href="{{ route('cart.index') }}" class="relative px-3 py-2 rounded-md bg-[#2563EB] text-white border-4 border-[#111827] font-black flex items-center gap-1.5 hover:bg-[#111827] transition-colors ml-2" title="Keranjang Belanja">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+                    <span>Keranjang</span>
+                    @if($cartCount > 0)
+                        <span class="bg-[#EF4444] text-white text-[11px] font-black px-1.5 py-0.2 rounded-full border border-white">{{ $cartCount }}</span>
+                    @endif
+                </a>
+
+                <!-- Riwayat Pesanan -->
+                <a href="{{ route('cart.orders') }}" class="px-3 py-2 rounded-md bg-white text-[#111827] border-4 border-[#111827] font-black text-xs uppercase hover:bg-[#111827] hover:text-white transition-colors" title="Riwayat Pesanan">
+                    Pesanan
+                </a>
+
+                <!-- Customer Profile & Logout -->
+                <div class="flex items-center gap-1.5 ml-1">
+                    <span class="text-xs font-black text-[#111827] bg-[#F59E0B] border-2 border-[#111827] px-2.5 py-1.5 rounded flex items-center gap-1" title="Akun Pembeli">
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
+                        <span>{{ Str::limit(Session::get('pelanggan_nama'), 10) }}</span>
+                    </span>
+                    <form action="{{ route('logout') }}" method="POST" class="inline">
+                        @csrf
+                        <button type="submit" class="bg-[#EF4444] text-white border-2 border-[#111827] px-2.5 py-1.5 rounded font-black text-xs uppercase hover:bg-black transition-colors" title="Keluar dari Akun">
+                            Keluar
+                        </button>
+                    </form>
+                </div>
+            @else
+                <button id="loginBtn"
+                    class="ml-2 xl:ml-4 bg-[#F59E0B] text-[#111827] border-4 border-[#111827] px-4 xl:px-6 py-2 rounded-md font-black hover:bg-[#111827] hover:text-[#F59E0B] transition-colors focus:outline-none focus:ring-4 focus:ring-[#F59E0B]/50">
+                    LOG IN
+                </button>
+            @endif
         </nav>
 
         <!-- Mobile Hamburger -->
@@ -115,12 +153,12 @@
 
     <!-- ====== LOGIN MODAL ====== -->
     <div id="loginModal"
-        class="fixed inset-0 z-[70] flex items-center justify-center p-4 hidden opacity-0 transition-opacity duration-200">
+        class="fixed inset-0 z-[70] flex items-center justify-center p-4 {{ session('open_login_modal') || $errors->has('auth_error') ? '' : 'hidden opacity-0' }} transition-opacity duration-200">
         <div id="loginBackdrop" class="absolute inset-0 bg-[#111827]/90 cursor-pointer"></div>
 
         <!-- Responsive Modal Card Flat -->
         <div id="loginFormContainer"
-            class="relative z-10 w-full max-w-[95%] sm:max-w-md bg-white border-4 border-[#111827] rounded-xl p-6 sm:p-8 transform scale-95 transition-transform duration-200 overflow-y-auto max-h-[90vh]">
+            class="relative z-10 w-full max-w-[95%] sm:max-w-md bg-white border-4 border-[#111827] rounded-xl p-6 sm:p-8 transform {{ session('open_login_modal') || $errors->has('auth_error') ? 'scale-100' : 'scale-95' }} transition-transform duration-200 overflow-y-auto max-h-[90vh] shadow-2xl">
 
             <button id="closeModalBtn"
                 class="absolute top-3 sm:top-4 right-3 sm:right-4 text-[#111827] hover:bg-[#F3F4F6] p-1 border-4 border-transparent hover:border-[#111827] rounded-md transition focus:outline-none">
@@ -130,47 +168,51 @@
             </button>
 
             <div class="mb-6 sm:mb-8 text-center pt-2 sm:pt-4">
-                <h2 class="text-3xl sm:text-4xl font-black text-[#111827] uppercase tracking-tighter mb-2">Login</h2>
-                <div class="w-16 h-2 bg-[#2563EB] mx-auto mb-4"></div>
-                <p class="text-[#4B5563] font-bold text-sm sm:text-base">Akses area manajerial.</p>
+                <div class="inline-block px-3 py-1 bg-[#2563EB]/10 text-[#2563EB] text-xs font-black uppercase tracking-wider rounded mb-2">
+                    Akses Pembeli BUMDes
+                </div>
+                <h2 class="text-3xl sm:text-4xl font-black text-[#111827] uppercase tracking-tighter mb-2">Login Akun</h2>
+                <div class="w-16 h-2 bg-[#2563EB] mx-auto mb-3"></div>
+                <p class="text-[#4B5563] font-bold text-xs sm:text-sm">Masuk untuk memesan produk & melacak checkout.</p>
             </div>
 
-            <form action="{{ url('/login') }}" method="POST" class="space-y-4 sm:space-y-6">
+            @if($errors->has('auth_error'))
+                <div class="mb-4 p-3 bg-red-100 border-2 border-red-500 text-red-700 text-xs font-bold rounded">
+                    {{ $errors->first('auth_error') }}
+                </div>
+            @endif
+
+            <form action="{{ url('/login') }}" method="POST" class="space-y-4 sm:space-y-5">
                 @csrf
                 <div>
-                    <label for="username" class="block text-xs sm:text-sm font-bold text-[#111827] uppercase tracking-widest mb-1 sm:mb-2">Username</label>
-                    <input type="text" name="username" id="username"
-                        class="block w-full px-3 sm:px-4 py-3 sm:py-4 border-4 border-[#111827] rounded-md bg-[#F3F4F6] text-[#111827] font-bold placeholder-[#9CA3AF] focus:outline-none focus:bg-white focus:border-[#2563EB] transition-colors"
-                        placeholder="USERNAME" required>
+                    <label for="username" class="block text-xs sm:text-sm font-black text-[#111827] uppercase tracking-widest mb-1">Username / Email</label>
+                    <input type="text" name="username" id="username" value="{{ old('username') }}"
+                        class="block w-full px-3 sm:px-4 py-3 border-4 border-[#111827] rounded-md bg-[#F3F4F6] text-[#111827] font-bold placeholder-[#9CA3AF] focus:outline-none focus:bg-white focus:border-[#2563EB] transition-colors text-sm"
+                        placeholder="Masukkan nama atau email" required>
                 </div>
 
                 <div>
-                    <label for="password" class="block text-xs sm:text-sm font-bold text-[#111827] uppercase tracking-widest mb-1 sm:mb-2">Password</label>
+                    <label for="password" class="block text-xs sm:text-sm font-black text-[#111827] uppercase tracking-widest mb-1">Password</label>
                     <input type="password" name="password" id="password"
-                        class="block w-full px-3 sm:px-4 py-3 sm:py-4 border-4 border-[#111827] rounded-md bg-[#F3F4F6] text-[#111827] font-bold placeholder-[#9CA3AF] focus:outline-none focus:bg-white focus:border-[#2563EB] transition-colors"
-                        placeholder="PASSWORD" required>
-                </div>
-
-                <div class="flex items-center justify-between">
-                    <div class="flex items-center gap-2">
-                        <input id="remember-me" name="remember-me" type="checkbox"
-                            class="h-5 w-5 border-4 border-[#111827] rounded-sm bg-white cursor-pointer appearance-none checked:bg-[#2563EB]">
-                        <label for="remember-me" class="block text-sm font-bold text-[#111827] cursor-pointer">
-                            Ingat Saya
-                        </label>
-                    </div>
+                        class="block w-full px-3 sm:px-4 py-3 border-4 border-[#111827] rounded-md bg-[#F3F4F6] text-[#111827] font-bold placeholder-[#9CA3AF] focus:outline-none focus:bg-white focus:border-[#2563EB] transition-colors text-sm"
+                        placeholder="••••••••" required>
                 </div>
 
                 <div>
                     <button type="submit"
-                        class="w-full flex justify-center py-4 px-4 rounded-md text-sm sm:text-base font-black uppercase tracking-widest text-[#111827] bg-[#F59E0B] border-4 border-[#111827] hover:bg-[#111827] hover:text-[#F59E0B] transition-colors shadow-[4px_4px_0_0_#111827] hover:shadow-none hover:translate-x-1 hover:translate-y-1">
-                        MASUK SISTEM
+                        class="w-full flex justify-center py-3.5 px-4 rounded-md text-sm font-black uppercase tracking-widest text-[#111827] bg-[#F59E0B] border-4 border-[#111827] hover:bg-[#111827] hover:text-[#F59E0B] transition-colors shadow-[4px_4px_0_0_#111827] hover:shadow-none hover:translate-x-0.5 hover:translate-y-0.5">
+                        MASUK KE AKUN
                     </button>
                 </div>
             </form>
 
-            <div class="mt-6 sm:mt-8 text-center border-t-4 border-[#111827] pt-4 sm:pt-6">
-                <button type="button" id="openRegisterFromLoginBtn" class="font-bold text-[#2563EB] hover:text-[#111827] transition-colors uppercase tracking-widest text-sm">Ganti ke Pendaftaran</button>
+            <div class="mt-6 text-center border-t-4 border-[#111827] pt-4 flex flex-col gap-2">
+                <button type="button" id="openRegisterFromLoginBtn" class="font-bold text-[#2563EB] hover:text-[#111827] transition-colors uppercase tracking-wider text-xs">
+                    Belum punya akun? <span class="underline font-black">Daftar Akun Baru</span>
+                </button>
+                <a href="{{ url('/admin/login') }}" class="text-[11px] font-bold text-slate-400 hover:text-[#111827] transition-colors">
+                    Login sebagai Administrator / Pengurus →
+                </a>
             </div>
         </div>
     </div>
@@ -182,7 +224,7 @@
 
         <!-- Responsive Modal Card Flat -->
         <div id="registerFormContainer"
-             class="relative z-10 w-full max-w-[95%] sm:max-w-md bg-white border-4 border-[#111827] rounded-xl p-6 sm:p-8 transform scale-95 transition-transform duration-200 overflow-y-auto max-h-[90vh]">
+             class="relative z-10 w-full max-w-[95%] sm:max-w-lg bg-white border-4 border-[#111827] rounded-xl p-6 sm:p-8 transform scale-95 transition-transform duration-200 overflow-y-auto max-h-[90vh] shadow-2xl">
 
             <button id="closeRegisterModalBtn"
                  class="absolute top-3 sm:top-4 right-3 sm:right-4 text-[#111827] hover:bg-[#F3F4F6] p-1 border-4 border-transparent hover:border-[#111827] rounded-md transition focus:outline-none">
@@ -191,45 +233,66 @@
                 </svg>
             </button>
 
-            <div class="mb-6 sm:mb-8 text-center pt-2 sm:pt-4">
-                <h2 class="text-3xl sm:text-4xl font-black text-[#111827] uppercase tracking-tighter mb-2">Daftar</h2>
-                 <div class="w-16 h-2 bg-[#10B981] mx-auto mb-4"></div>
-                <p class="text-[#4B5563] font-bold text-sm sm:text-base">Registrasi akses awal.</p>
+            <div class="mb-6 text-center pt-2">
+                <div class="inline-block px-3 py-1 bg-[#10B981]/10 text-[#10B981] text-xs font-black uppercase tracking-wider rounded mb-2">
+                    Registrasi Pelanggan
+                </div>
+                <h2 class="text-3xl sm:text-4xl font-black text-[#111827] uppercase tracking-tighter mb-2">Daftar Akun</h2>
+                <div class="w-16 h-2 bg-[#10B981] mx-auto mb-3"></div>
+                <p class="text-[#4B5563] font-bold text-xs sm:text-sm">Lengkapi data untuk kemudahan pengiriman pesanan.</p>
             </div>
 
-            <form action="{{ url('/register') }}" method="POST" class="space-y-4 sm:space-y-5">
+            <form action="{{ url('/register') }}" method="POST" class="space-y-3.5">
                 @csrf
                 <div>
-                    <label for="reg_name" class="block text-xs sm:text-sm font-bold text-[#111827] uppercase tracking-widest mb-1">Username</label>
-                    <input type="text" name="name" id="reg_name"
-                           class="block w-full px-3 sm:px-4 py-3 sm:py-4 border-4 border-[#111827] rounded-md bg-[#F3F4F6] text-[#111827] font-bold placeholder-[#9CA3AF] focus:outline-none focus:bg-white focus:border-[#10B981] transition-colors"
-                        placeholder="USERNAME BARU" required>
+                    <label for="reg_name" class="block text-xs font-black text-[#111827] uppercase tracking-widest mb-1">Nama Lengkap / Username <span class="text-red-500">*</span></label>
+                    <input type="text" name="nama" id="reg_name" value="{{ old('nama') }}"
+                           class="block w-full px-3 py-2.5 border-4 border-[#111827] rounded-md bg-[#F3F4F6] text-[#111827] font-bold placeholder-[#9CA3AF] focus:outline-none focus:bg-white focus:border-[#10B981] transition-colors text-sm"
+                        placeholder="Contoh: Rahmat Hidayat" required>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div>
+                        <label for="reg_email" class="block text-xs font-black text-[#111827] uppercase tracking-widest mb-1">Email <span class="text-red-500">*</span></label>
+                        <input type="email" name="email" id="reg_email" value="{{ old('email') }}"
+                               class="block w-full px-3 py-2.5 border-4 border-[#111827] rounded-md bg-[#F3F4F6] text-[#111827] font-bold placeholder-[#9CA3AF] focus:outline-none focus:bg-white focus:border-[#10B981] transition-colors text-sm"
+                            placeholder="nama@email.com" required>
+                    </div>
+
+                    <div>
+                        <label for="reg_no_hp" class="block text-xs font-black text-[#111827] uppercase tracking-widest mb-1">No. WhatsApp / HP <span class="text-red-500">*</span></label>
+                        <input type="tel" name="no_hp" id="reg_no_hp" value="{{ old('no_hp') }}"
+                               class="block w-full px-3 py-2.5 border-4 border-[#111827] rounded-md bg-[#F3F4F6] text-[#111827] font-bold placeholder-[#9CA3AF] focus:outline-none focus:bg-white focus:border-[#10B981] transition-colors text-sm"
+                            placeholder="081234567890" required>
+                    </div>
                 </div>
 
                 <div>
-                    <label for="reg_email" class="block text-xs sm:text-sm font-bold text-[#111827] uppercase tracking-widest mb-1">Email</label>
-                    <input type="email" name="email" id="reg_email"
-                           class="block w-full px-3 sm:px-4 py-3 sm:py-4 border-4 border-[#111827] rounded-md bg-[#F3F4F6] text-[#111827] font-bold placeholder-[#9CA3AF] focus:outline-none focus:bg-white focus:border-[#10B981] transition-colors"
-                        placeholder="ALAMAT EMAIL" required>
+                    <label for="reg_alamat" class="block text-xs font-black text-[#111827] uppercase tracking-widest mb-1">Alamat Pengiriman</label>
+                    <textarea name="alamat" id="reg_alamat" rows="2"
+                              class="block w-full px-3 py-2 border-4 border-[#111827] rounded-md bg-[#F3F4F6] text-[#111827] font-bold placeholder-[#9CA3AF] focus:outline-none focus:bg-white focus:border-[#10B981] transition-colors text-xs"
+                              placeholder="Nama jalan, RT/RW, Dusun, Desa...">{{ old('alamat') }}</textarea>
                 </div>
 
                 <div>
-                    <label for="reg_password" class="block text-xs sm:text-sm font-bold text-[#111827] uppercase tracking-widest mb-1">Password</label>
+                    <label for="reg_password" class="block text-xs font-black text-[#111827] uppercase tracking-widest mb-1">Password <span class="text-red-500">*</span></label>
                      <input type="password" name="password" id="reg_password"
-                            class="block w-full px-3 sm:px-4 py-3 sm:py-4 border-4 border-[#111827] rounded-md bg-[#F3F4F6] text-[#111827] font-bold placeholder-[#9CA3AF] focus:outline-none focus:bg-white focus:border-[#10B981] transition-colors"
-                        placeholder="PASSWORD BARU" required>
+                            class="block w-full px-3 py-2.5 border-4 border-[#111827] rounded-md bg-[#F3F4F6] text-[#111827] font-bold placeholder-[#9CA3AF] focus:outline-none focus:bg-white focus:border-[#10B981] transition-colors text-sm"
+                        placeholder="Minimal 4 karakter" required>
                 </div>
 
                 <div class="pt-2">
                     <button type="submit"
-                        class="w-full flex justify-center py-4 px-4 rounded-md text-sm sm:text-base font-black uppercase tracking-widest text-[#111827] bg-[#10B981] border-4 border-[#111827] hover:bg-[#111827] hover:text-[#10B981] transition-colors shadow-[4px_4px_0_0_#111827] hover:shadow-none hover:translate-x-1 hover:translate-y-1">
-                        BUAT AKUN
+                        class="w-full flex justify-center py-3.5 px-4 rounded-md text-sm font-black uppercase tracking-widest text-[#111827] bg-[#10B981] border-4 border-[#111827] hover:bg-[#111827] hover:text-[#10B981] transition-colors shadow-[4px_4px_0_0_#111827] hover:shadow-none hover:translate-x-0.5 hover:translate-y-0.5">
+                        DAFTAR SEBAGAI PEMBELI
                     </button>
                 </div>
             </form>
 
-            <div class="mt-6 sm:mt-8 text-center border-t-4 border-[#111827] pt-4 sm:pt-6">
-                 <button type="button" id="openLoginFromRegisterBtn" class="font-bold text-[#10B981] hover:text-[#111827] transition-colors uppercase tracking-widest text-sm">Kembali ke Login</button>
+            <div class="mt-5 text-center border-t-4 border-[#111827] pt-4">
+                 <button type="button" id="openLoginFromRegisterBtn" class="font-bold text-[#10B981] hover:text-[#111827] transition-colors uppercase tracking-widest text-xs">
+                     Sudah punya akun? <span class="underline font-black">Login Sekarang</span>
+                 </button>
             </div>
         </div>
     </div>

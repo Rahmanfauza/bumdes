@@ -86,14 +86,15 @@
         </div>
 
         {{-- Profil Pengurus --}}
-        <a href="{{ route('admin.anggota') }}"
+        <a href="{{ Session::get('admin_role') == 1 ? route('admin.akun.index') : '#' }}"
+           onclick="{{ Session::get('admin_role') != 1 ? 'event.preventDefault(); alert(\'Hanya Direktur yang dapat mengelola akun pengurus.\');' : '' }}"
            class="col-span-1 bg-[#FAFAF9] border border-[#D6D3D1] rounded-[12px] p-5 flex flex-col items-center justify-center gap-2 hover:shadow-[0_4px_16px_rgba(28,25,23,0.06)] hover:bg-[#F5F5F4] transition-all group">
             <svg class="w-8 h-8 text-[#C2410C]" fill="currentColor" viewBox="0 0 24 24">
                 <path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/>
             </svg>
             <div class="text-center">
-                <p class="text-[14px] font-semibold text-[#1C1917]">Profil Pengurus</p>
-                <p class="text-[12px] text-[#57534E]">BUMDes</p>
+                <p class="text-[14px] font-semibold text-[#1C1917]">Akun Pengurus</p>
+                <p class="text-[12px] text-[#57534E]">Manajemen Akses</p>
             </div>
         </a>
     </div>
@@ -124,14 +125,14 @@
         <div class="bg-[#F5F5F4] border border-[#D6D3D1] rounded-[12px] p-5 shadow-sm">
             <h3 class="text-[16px] font-semibold text-[#1C1917] mb-4">Aksi Cepat</h3>
             <div class="flex flex-col gap-3">
-                <a href="{{ route('pelanggan.index') }}"
+                <a href="{{ route('admin.surat.create') }}"
                    class="flex items-center gap-3 px-4 py-3 bg-[#FAFAF9] border border-[#D6D3D1] rounded-[8px] font-semibold text-[14px] text-[#1C1917] hover:border-[#C2410C] hover:shadow-[0_4px_12px_rgba(194,65,12,0.1)] transition-all">
                     <svg class="w-5 h-5 shrink-0 text-[#C2410C]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/>
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
                     </svg>
-                    Pelanggan / Anggota
+                    Buat Surat / Dokumen
                 </a>
-                <a href="{{ route('transaksi.index') }}"
+                <a href="{{ route('admin.transaksi.index') }}"
                    class="flex items-center gap-3 px-4 py-3 bg-[#FAFAF9] border border-[#D6D3D1] rounded-[8px] font-semibold text-[14px] text-[#1C1917] hover:border-[#C2410C] hover:shadow-[0_4px_12px_rgba(194,65,12,0.1)] transition-all">
                     <svg class="w-5 h-5 shrink-0 text-[#C2410C]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"/>
@@ -143,7 +144,7 @@
                         </span>
                     @endif
                 </a>
-                <a href="{{ route('pos.index') }}"
+                <a href="{{ route('admin.transaksi.create') }}"
                    class="flex items-center gap-3 px-4 py-3 bg-[#FAFAF9] border border-[#D6D3D1] rounded-[8px] font-semibold text-[14px] text-[#1C1917] hover:border-[#C2410C] hover:shadow-[0_4px_12px_rgba(194,65,12,0.1)] transition-all">
                     <svg class="w-5 h-5 shrink-0 text-[#C2410C]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/>
@@ -164,7 +165,7 @@
                     </div>
                 @endif
                 @php
-                    $produkHabis = \App\Models\ProdukJasa::where('stok_awal', '<=', 5)->count();
+                    $produkHabis = \App\Models\Produk::where('stok', '<=', 5)->count();
                 @endphp
                 @if($produkHabis > 0)
                     <div class="flex items-start gap-3 py-2 border-b border-[#D6D3D1] last:border-0">
@@ -180,11 +181,11 @@
                 @endif
                 <div class="flex items-start gap-3 py-2 border-b border-[#D6D3D1] last:border-0">
                     <div class="w-2 h-2 mt-1.5 bg-[#78716C] rounded-full shrink-0"></div>
-                    <span class="text-[#78716C] text-[14px]">{{ $jumlahAnggota ?? 0 }} anggota terdaftar</span>
+                    <span class="text-[#78716C] text-[14px]">{{ $jumlahPelanggan ?? 0 }} pelanggan terdaftar</span>
                 </div>
                 <div class="flex items-start gap-3 py-2 border-b border-[#D6D3D1] last:border-0">
                     <div class="w-2 h-2 mt-1.5 bg-[#78716C] rounded-full shrink-0"></div>
-                    <span class="text-[#78716C] text-[14px]">{{ $jumlahUnitUsaha ?? 0 }} unit usaha aktif</span>
+                    <span class="text-[#78716C] text-[14px]">{{ $jumlahProduk ?? 0 }} jenis produk tersedia</span>
                 </div>
             </div>
         </div>

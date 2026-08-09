@@ -61,96 +61,116 @@
                     <span x-show="sidebarOpen" x-transition.opacity class="whitespace-nowrap text-[15px]">Dashboard</span>
                 </a>
 
-                <a href="{{ route('input-data.anggota') }}"
-                    class="flex items-center gap-3 px-4 py-2.5 {{ request()->is('admin/input-data*') ? 'bg-[#F5F5F4] text-[#C2410C] border-l-[3px] border-[#C2410C]' : 'border-l-[3px] border-transparent text-[#57534E] hover:bg-[#F5F5F4] hover:text-[#1C1917]' }} font-semibold transition-colors group"
-                    title="Input Data">
-                    <svg class="w-5 h-5 shrink-0 {{ request()->is('admin/input-data*') ? 'text-[#C2410C]' : 'text-[#78716C] group-hover:text-[#1C1917]' }}"
-                        fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M12 6v6m0 0v6m0-6h6m-6 0H6">
-                        </path>
-                    </svg>
-                    <span x-show="sidebarOpen" x-transition.opacity class="whitespace-nowrap text-[15px]">Input Data</span>
-                </a>
+                @php $role = Session::get('admin_role', 0); @endphp
 
-                <a href="{{ route('unit-usaha') }}"
-                    class="flex items-center gap-3 px-4 py-2.5 {{ request()->routeIs('unit-usaha*') ? 'bg-[#F5F5F4] text-[#C2410C] border-l-[3px] border-[#C2410C]' : 'border-l-[3px] border-transparent text-[#57534E] hover:bg-[#F5F5F4] hover:text-[#1C1917]' }} font-semibold transition-colors group"
-                    title="Unit Usaha">
-                    <svg class="w-5 h-5 shrink-0 {{ request()->routeIs('unit-usaha*') ? 'text-[#C2410C]' : 'text-[#78716C] group-hover:text-[#1C1917]' }}"
-                        fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4">
-                        </path>
-                    </svg>
-                    <span x-show="sidebarOpen" x-transition.opacity class="whitespace-nowrap text-[15px]">Unit Usaha</span>
-                </a>
-
-                <a href="{{ route('transaksi.index') }}"
-                    class="flex items-center gap-3 px-4 py-2.5 {{ request()->routeIs('transaksi.*') ? 'bg-[#F5F5F4] text-[#C2410C] border-l-[3px] border-[#C2410C]' : 'border-l-[3px] border-transparent text-[#57534E] hover:bg-[#F5F5F4] hover:text-[#1C1917]' }} font-semibold transition-colors group"
-                    title="Transaksi">
-                    <svg class="w-5 h-5 shrink-0 {{ request()->routeIs('transaksi.*') ? 'text-[#C2410C]' : 'text-[#78716C] group-hover:text-[#1C1917]' }}"
-                        fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z">
-                        </path>
-                    </svg>
-                    <span x-show="sidebarOpen" x-transition.opacity class="whitespace-nowrap text-[15px]">Transaksi</span>
-                </a>
-
-                <a href="{{ route('laporan.index') }}"
-                    class="flex items-center gap-3 px-4 py-2.5 {{ request()->routeIs('laporan.*') ? 'bg-[#F5F5F4] text-[#C2410C] border-l-[3px] border-[#C2410C]' : 'border-l-[3px] border-transparent text-[#57534E] hover:bg-[#F5F5F4] hover:text-[#1C1917]' }} font-semibold transition-colors group"
-                    title="Laporan">
-                    <svg class="w-5 h-5 shrink-0 {{ request()->routeIs('laporan.*') ? 'text-[#C2410C]' : 'text-[#78716C] group-hover:text-[#1C1917]' }}"
-                        fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z">
-                        </path>
-                    </svg>
-                    <span x-show="sidebarOpen" x-transition.opacity class="whitespace-nowrap text-[15px]">Laporan</span>
-                </a>
-                
-                <!-- Dropdown Kelola Konten -->
-                <div x-data="{ open: {{ request()->routeIs('admin.anggota') ? 'true' : 'false' }} }" class="relative">
-                    <button @click="if(sidebarOpen) open = !open"
-                        :class="open && sidebarOpen ? 'bg-[#F5F5F4] text-[#1C1917]' : 'text-[#57534E] hover:bg-[#F5F5F4] hover:text-[#1C1917]'"
-                        class="w-full flex items-center justify-between px-4 py-2.5 border-l-[3px] border-transparent font-semibold transition-colors group"
-                        title="Kelola Konten">
-                        <div class="flex items-center gap-3">
-                            <svg class="w-5 h-5 shrink-0"
-                                :class="open && sidebarOpen ? 'text-[#1C1917]' : 'text-[#78716C] group-hover:text-[#1C1917]'" fill="none"
-                                stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 002-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10">
-                                </path>
+                <!-- MENU UNTUK ADMIN (Role 1) -->
+                @if($role == 1)
+                    <!-- Dropdown Kelola Produk & Jasa -->
+                    <div x-data="{ open: {{ request()->is('admin/produk*') ? 'true' : 'false' }} }" class="relative">
+                        <button @click="if(sidebarOpen) open = !open"
+                            :class="open && sidebarOpen ? 'bg-[#F5F5F4] text-[#1C1917]' : 'text-[#57534E] hover:bg-[#F5F5F4] hover:text-[#1C1917]'"
+                            class="w-full flex items-center justify-between px-4 py-2.5 border-l-[3px] border-transparent font-semibold transition-colors group"
+                            title="Produk & Jasa">
+                            <div class="flex items-center gap-3">
+                                <svg class="w-5 h-5 shrink-0" :class="open && sidebarOpen ? 'text-[#1C1917]' : 'text-[#78716C] group-hover:text-[#1C1917]'" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
+                                </svg>
+                                <span x-show="sidebarOpen" x-transition.opacity class="whitespace-nowrap text-[15px]">Produk & Jasa</span>
+                            </div>
+                            <svg x-show="sidebarOpen" :class="open ? 'rotate-180' : ''" class="w-4 h-4 text-[#78716C] transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
                             </svg>
-                            <span x-show="sidebarOpen" x-transition.opacity class="whitespace-nowrap text-[15px]">Kelola Konten</span>
+                        </button>
+                        <div x-show="open && sidebarOpen" x-transition x-collapse class="pl-12 pr-4 pt-1 pb-2 space-y-1 bg-[#FAFAF9]">
+                            <a href="{{ route('admin.produk.index') }}" class="block py-2 text-[14px] px-3 rounded-[8px] {{ request()->routeIs('admin.produk.*') ? 'bg-[#F5F5F4] text-[#C2410C]' : 'text-[#57534E] hover:bg-[#F5F5F4] hover:text-[#1C1917]' }} font-semibold transition-colors" title="Daftar Produk">Daftar Produk</a>
+                            <a href="{{ route('admin.kategori.index') }}" class="block py-2 text-[14px] px-3 rounded-[8px] {{ request()->routeIs('admin.kategori.*') ? 'bg-[#F5F5F4] text-[#C2410C]' : 'text-[#57534E] hover:bg-[#F5F5F4] hover:text-[#1C1917]' }} font-semibold transition-colors" title="Kategori Produk">Kategori Produk</a>
                         </div>
-                        <svg x-show="sidebarOpen" :class="open ? 'rotate-180' : ''"
-                            class="w-4 h-4 text-[#78716C] transition-transform duration-200" fill="none" stroke="currentColor"
-                            viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7">
-                            </path>
-                        </svg>
-                    </button>
-
-                    <!-- Submenu -->
-                    <div x-show="open && sidebarOpen" x-transition x-collapse class="pl-12 pr-4 pt-1 pb-2 space-y-1 bg-[#FAFAF9]">
-                        <a href="{{ route('admin.anggota') }}"
-                            class="block py-2 text-[14px] px-3 rounded-[8px] transition-colors {{ request()->routeIs('admin.anggota') ? 'bg-[#F5F5F4] text-[#C2410C] font-semibold' : 'text-[#57534E] hover:bg-[#F5F5F4] hover:text-[#1C1917] font-semibold' }}"
-                            title="Pengurus">Pengurus</a>
-                        <a href="#"
-                            class="block py-2 text-[14px] px-3 rounded-[8px] text-[#57534E] hover:bg-[#F5F5F4] hover:text-[#1C1917] font-semibold transition-colors"
-                            title="Berita">Berita</a>
-                        <a href="#"
-                           class="block py-2 text-[14px] px-3 rounded-[8px] text-[#57534E] hover:bg-[#F5F5F4] hover:text-[#1C1917] font-semibold transition-colors"
-                            title="Produk">Produk</a>
                     </div>
-                </div>
+
+                    <!-- Pencatatan Transaksi Penjualan -->
+                    <a href="{{ route('admin.transaksi.index') }}"
+                        class="flex items-center gap-3 px-4 py-2.5 {{ request()->routeIs('admin.transaksi.*') ? 'bg-[#F5F5F4] text-[#C2410C] border-l-[3px] border-[#C2410C]' : 'border-l-[3px] border-transparent text-[#57534E] hover:bg-[#F5F5F4] hover:text-[#1C1917]' }} font-semibold transition-colors group"
+                        title="Transaksi Penjualan">
+                        <svg class="w-5 h-5 shrink-0 {{ request()->routeIs('admin.transaksi.*') ? 'text-[#C2410C]' : 'text-[#78716C] group-hover:text-[#1C1917]' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                        </svg>
+                        <span x-show="sidebarOpen" x-transition.opacity class="whitespace-nowrap text-[15px]">Transaksi Penjualan</span>
+                    </a>
+                @endif
+
+                <!-- MENU UNTUK SEKRETARIS (Role 2) -->
+                @if($role == 2)
+                    <!-- Persuratan -->
+                    <a href="{{ route('admin.surat.index') }}"
+                        class="flex items-center gap-3 px-4 py-2.5 {{ request()->routeIs('admin.surat.*') ? 'bg-[#F5F5F4] text-[#C2410C] border-l-[3px] border-[#C2410C]' : 'border-l-[3px] border-transparent text-[#57534E] hover:bg-[#F5F5F4] hover:text-[#1C1917]' }} font-semibold transition-colors group"
+                        title="Administrasi Persuratan">
+                        <svg class="w-5 h-5 shrink-0 {{ request()->routeIs('admin.surat.*') ? 'text-[#C2410C]' : 'text-[#78716C] group-hover:text-[#1C1917]' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                        </svg>
+                        <span x-show="sidebarOpen" x-transition.opacity class="whitespace-nowrap text-[15px]">Persuratan</span>
+                    </a>
+
+                    <!-- Arsip Digital -->
+                    <a href="{{ route('admin.arsip.index') }}"
+                        class="flex items-center gap-3 px-4 py-2.5 {{ request()->routeIs('admin.arsip.*') ? 'bg-[#F5F5F4] text-[#C2410C] border-l-[3px] border-[#C2410C]' : 'border-l-[3px] border-transparent text-[#57534E] hover:bg-[#F5F5F4] hover:text-[#1C1917]' }} font-semibold transition-colors group"
+                        title="Arsip Digital">
+                        <svg class="w-5 h-5 shrink-0 {{ request()->routeIs('admin.arsip.*') ? 'text-[#C2410C]' : 'text-[#78716C] group-hover:text-[#1C1917]' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4"></path>
+                        </svg>
+                        <span x-show="sidebarOpen" x-transition.opacity class="whitespace-nowrap text-[15px]">Arsip Digital</span>
+                    </a>
+                @endif
+
+                <!-- MENU UNTUK BENDAHARA (Role 3) -->
+                @if($role == 3)
+                    <!-- Buku Kas (Pemasukan & Pengeluaran) -->
+                    <a href="{{ route('admin.kas.index') }}"
+                        class="flex items-center gap-3 px-4 py-2.5 {{ request()->routeIs('admin.kas.*') ? 'bg-[#F5F5F4] text-[#C2410C] border-l-[3px] border-[#C2410C]' : 'border-l-[3px] border-transparent text-[#57534E] hover:bg-[#F5F5F4] hover:text-[#1C1917]' }} font-semibold transition-colors group"
+                        title="Buku Kas BUMDes">
+                        <svg class="w-5 h-5 shrink-0 {{ request()->routeIs('admin.kas.*') ? 'text-[#C2410C]' : 'text-[#78716C] group-hover:text-[#1C1917]' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                        <span x-show="sidebarOpen" x-transition.opacity class="whitespace-nowrap text-[15px]">Buku Kas</span>
+                    </a>
+
+                    <!-- Laporan Keuangan -->
+                    <a href="{{ route('admin.laporan.index') }}"
+                        class="flex items-center gap-3 px-4 py-2.5 {{ request()->routeIs('admin.laporan.*') ? 'bg-[#F5F5F4] text-[#C2410C] border-l-[3px] border-[#C2410C]' : 'border-l-[3px] border-transparent text-[#57534E] hover:bg-[#F5F5F4] hover:text-[#1C1917]' }} font-semibold transition-colors group"
+                        title="Laporan Keuangan">
+                        <svg class="w-5 h-5 shrink-0 {{ request()->routeIs('admin.laporan.*') ? 'text-[#C2410C]' : 'text-[#78716C] group-hover:text-[#1C1917]' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                        </svg>
+                        <span x-show="sidebarOpen" x-transition.opacity class="whitespace-nowrap text-[15px]">Laporan Keuangan</span>
+                    </a>
+                @endif
+
+                <!-- MENU UNTUK DIREKTUR (Role 4) -->
+                @if($role == 4)
+                    <!-- Approval Dokumen -->
+                    <a href="{{ route('admin.approval.index') }}"
+                        class="flex items-center gap-3 px-4 py-2.5 {{ request()->routeIs('admin.approval.*') ? 'bg-[#F5F5F4] text-[#C2410C] border-l-[3px] border-[#C2410C]' : 'border-l-[3px] border-transparent text-[#57534E] hover:bg-[#F5F5F4] hover:text-[#1C1917]' }} font-semibold transition-colors group"
+                        title="Approval Dokumen & Laporan">
+                        <svg class="w-5 h-5 shrink-0 {{ request()->routeIs('admin.approval.*') ? 'text-[#C2410C]' : 'text-[#78716C] group-hover:text-[#1C1917]' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                        <span x-show="sidebarOpen" x-transition.opacity class="whitespace-nowrap text-[15px]">Approval Dokumen</span>
+                    </a>
+
+                    <!-- Manajemen Akun -->
+                    <a href="{{ route('admin.akun.index') }}"
+                        class="flex items-center gap-3 px-4 py-2.5 {{ request()->routeIs('admin.akun.*') ? 'bg-[#F5F5F4] text-[#C2410C] border-l-[3px] border-[#C2410C]' : 'border-l-[3px] border-transparent text-[#57534E] hover:bg-[#F5F5F4] hover:text-[#1C1917]' }} font-semibold transition-colors group"
+                        title="Manajemen Akun Pengurus">
+                        <svg class="w-5 h-5 shrink-0 {{ request()->routeIs('admin.akun.*') ? 'text-[#C2410C]' : 'text-[#78716C] group-hover:text-[#1C1917]' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path>
+                        </svg>
+                        <span x-show="sidebarOpen" x-transition.opacity class="whitespace-nowrap text-[15px]">Manajemen Akun</span>
+                    </a>
+                @endif
             </div>
 
             <!-- Profile / Logout Area Sidebar (Bottom) -->
             <div class="p-4 border-t border-[#D6D3D1] shrink-0">
-                <form action="{{ url('/logout') }}" method="POST">
+                <form action="{{ route('admin.logout') }}" method="POST">
                     @csrf
                     <button type="submit"
                         class="flex items-center justify-center gap-2 w-full py-2.5 rounded-[8px] font-semibold text-white bg-[#DC2626] hover:bg-[#B91C1C] transition-all"
@@ -195,11 +215,11 @@
                     <div
                         class="flex items-center gap-3 bg-[#F5F5F4] py-1.5 px-3 rounded-[8px] border border-[#D6D3D1] cursor-pointer hover:border-[#C2410C] transition-colors">
                         <span class="text-[14px] font-semibold hidden sm:block text-[#1C1917]">
-                            {{ Session::get('username', 'ADMIN') }}
+                            {{ Session::get('admin_username', 'ADMIN') }}
                         </span>
                         <div
                             class="w-8 h-8 rounded-[9999px] bg-white border border-[#D6D3D1] flex items-center justify-center text-[#1C1917] font-semibold uppercase text-sm shrink-0">
-                            {{ substr(Session::get('username', 'A'), 0, 1) }}
+                            {{ substr(Session::get('admin_username', 'A'), 0, 1) }}
                         </div>
                     </div>
                 </div>

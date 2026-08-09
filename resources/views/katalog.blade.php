@@ -14,16 +14,16 @@
             <div class="absolute bottom-10 right-10 w-24 h-24 bg-white/20 rounded-full pointer-events-none"></div>
             
             <div class="relative z-10 w-full max-w-xl">
-                <div class="inline-block px-4 py-1.5 bg-[#F59E0B] rounded-md text-white font-black tracking-widest uppercase text-sm mb-6">
-                    Inventaris Lokal
+                <div class="inline-block px-4 py-1.5 bg-[#F59E0B] rounded-md text-white font-black tracking-widest uppercase text-sm mb-6 shadow-sm">
+                    Inventaris & Komoditas Lokal
                 </div>
 
                 <h1 class="text-5xl md:text-6xl lg:text-7xl font-black text-white tracking-tighter leading-[0.95] mb-6 uppercase">
-                    Katalog<br/><span class="text-[#111827]">Unggulan</span>
+                    Katalog<br/><span class="text-[#111827]">Produk Desa</span>
                 </h1>
 
-                <p class="text-xl font-bold text-white/90 leading-snug">
-                    Distribusi produk otentik desa. Dari bumi ke tangan Anda tanpa perantara.
+                <p class="text-lg sm:text-xl font-bold text-white/90 leading-snug">
+                    Distribusi produk otentik desa. Dari hasil bumi dan tangan pengrajin lokal langsung ke tangan Anda.
                 </p>
             </div>
         </div>
@@ -38,170 +38,189 @@
 
 
     <!-- ====== CATALOG SECTION ====== -->
-    <div class="w-full py-24 bg-white relative border-b-4 border-[#111827]">
-        <div class="max-w-7xl mx-auto px-6 lg:px-12">
+    <div class="w-full py-16 sm:py-24 bg-white relative border-b-4 border-[#111827]">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-12">
 
-            <!-- Category Filter (Flat) -->
-            <div class="flex flex-wrap justify-center gap-4 mb-16">
-                <button class="px-8 py-3 rounded-md bg-[#111827] text-white font-black uppercase tracking-widest text-sm border-4 border-[#111827] hover:bg-white hover:text-[#111827] transition-colors">Semua</button>
-                <button class="px-8 py-3 rounded-md bg-white text-[#4B5563] font-black uppercase tracking-widest text-sm border-4 border-[#E5E7EB] hover:border-[#111827] hover:text-[#111827] transition-colors">Hasil Tani</button>
-                <button class="px-8 py-3 rounded-md bg-white text-[#4B5563] font-black uppercase tracking-widest text-sm border-4 border-[#E5E7EB] hover:border-[#111827] hover:text-[#111827] transition-colors">Kerajinan</button>
-                <button class="px-8 py-3 rounded-md bg-white text-[#4B5563] font-black uppercase tracking-widest text-sm border-4 border-[#E5E7EB] hover:border-[#111827] hover:text-[#111827] transition-colors">Kuliner</button>
+            @if(session('success'))
+            <div class="mb-8 p-4 bg-emerald-50 border-4 border-[#10B981] rounded-xl flex items-center justify-between text-emerald-900 font-bold text-sm">
+                <div class="flex items-center gap-3">
+                    <svg class="w-6 h-6 text-[#10B981] shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                    <span>{{ session('success') }}</span>
+                </div>
+                <a href="{{ route('cart.index') }}" class="px-4 py-1.5 bg-[#10B981] text-white rounded font-black text-xs uppercase hover:bg-black transition-colors shrink-0">
+                    Buka Keranjang →
+                </a>
+            </div>
+            @endif
+
+            @if($errors->has('error'))
+            <div class="mb-8 p-4 bg-red-50 border-4 border-[#EF4444] rounded-xl flex items-center gap-3 text-red-900 font-bold text-sm">
+                <svg class="w-6 h-6 text-[#EF4444] shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                <span>{{ $errors->first('error') }}</span>
+            </div>
+            @endif
+
+            <!-- Search & Filter Bar -->
+            <div class="mb-12 flex flex-col md:flex-row items-center justify-between gap-6">
+                <!-- Search Form -->
+                <form action="{{ url('/katalog') }}" method="GET" class="w-full md:w-96 flex items-center">
+                    @if($kategoriId && $kategoriId != 'all')
+                        <input type="hidden" name="kategori" value="{{ $kategoriId }}">
+                    @endif
+                    <div class="relative w-full">
+                        <input type="text" name="q" value="{{ $search ?? '' }}" 
+                            placeholder="Cari komoditas produk..." 
+                            class="w-full pl-11 pr-24 py-3 bg-slate-50 border-4 border-[#111827] rounded-md font-bold text-sm text-[#111827] placeholder-slate-400 focus:outline-none focus:bg-white transition-all">
+                        <svg class="w-5 h-5 text-slate-500 absolute left-3.5 top-1/2 -translate-y-1/2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                        </svg>
+                        <button type="submit" class="absolute right-1.5 top-1/2 -translate-y-1/2 bg-[#111827] text-white text-xs font-black uppercase px-4 py-2 rounded">
+                            Cari
+                        </button>
+                    </div>
+                </form>
+
+                <!-- Total Count Display -->
+                <div class="text-sm font-bold text-slate-600 self-start md:self-auto flex items-center gap-2">
+                    <span>Menampilkan:</span>
+                    <span class="bg-[#111827] text-white px-3 py-1 rounded font-mono font-bold">{{ $produks->count() }} Produk</span>
+                </div>
             </div>
 
-            <!-- Product Grid -->
+            <!-- Category Filter Buttons (Flat & Dynamic) -->
+            <div class="flex flex-wrap justify-start sm:justify-center gap-3 mb-16">
+                <a href="{{ url('/katalog' . ($search ? '?q=' . urlencode($search) : '')) }}" 
+                   class="px-6 py-2.5 rounded-md font-black uppercase tracking-wider text-xs sm:text-sm border-4 transition-all duration-150 {{ !$kategoriId || $kategoriId == 'all' ? 'bg-[#111827] text-white border-[#111827] shadow-sm' : 'bg-white text-[#4B5563] border-[#E5E7EB] hover:border-[#111827] hover:text-[#111827]' }}">
+                    Semua Komoditas
+                </a>
+                @foreach($kategoris as $kat)
+                <a href="{{ url('/katalog?kategori=' . $kat->id_kategori . ($search ? '&q=' . urlencode($search) : '')) }}" 
+                   class="px-6 py-2.5 rounded-md font-black uppercase tracking-wider text-xs sm:text-sm border-4 transition-all duration-150 {{ $kategoriId == $kat->id_kategori ? 'bg-[#2563EB] text-white border-[#2563EB] shadow-sm' : 'bg-white text-[#4B5563] border-[#E5E7EB] hover:border-[#111827] hover:text-[#111827]' }}">
+                    {{ $kat->nama_kategori }} ({{ $kat->produk_count }})
+                </a>
+                @endforeach
+            </div>
+
+            <!-- Product Grid (Dynamic from Database) -->
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-
-                <!-- Product Card 1 -->
-                <div class="bg-[#F3F4F6] p-4 rounded-2xl flex flex-col group cursor-pointer hover:bg-[#E5E7EB] transition-colors border-4 border-transparent hover:border-[#2563EB]">
-                    <div class="w-full aspect-[4/3] rounded-xl bg-gray-300 overflow-hidden relative mb-6 border-4 border-transparent group-hover:border-[#111827] transition-all">
-                        <img src="https://images.unsplash.com/photo-1594282486552-05b4d80fbb9f?q=80&w=600&auto=format&fit=crop"
-                            alt="Sayuran Organik" class="w-full h-full object-cover">
-                        <div class="absolute top-3 right-3 bg-[#10B981] text-white px-3 py-1 font-bold text-xs uppercase tracking-wider rounded">Laris</div>
-                    </div>
-                    <div class="px-2 flex flex-col flex-grow">
-                        <div class="text-xs text-[#2563EB] font-black mb-2 uppercase tracking-widest">Hasil Tani</div>
-                        <h3 class="text-2xl font-black text-[#111827] uppercase tracking-tighter mb-2 leading-tight">Paket Sayuran Organik</h3>
-                        <p class="text-[#4B5563] font-medium text-sm leading-relaxed mb-6 flex-grow">Sayuran murni tanpa unsur pestisida rekayasa.</p>
+                @forelse($produks as $item)
+                <div class="bg-[#F3F4F6] p-4 rounded-2xl flex flex-col group hover:bg-[#E5E7EB] transition-all border-4 border-transparent hover:border-[#2563EB] shadow-sm">
+                    <!-- Image Card -->
+                    <div class="w-full aspect-[4/3] rounded-xl bg-gray-300 overflow-hidden relative mb-5 border-4 border-transparent group-hover:border-[#111827] transition-all">
+                        <img src="{{ $item->gambar_url }}" alt="{{ $item->nama_produk }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
                         
-                        <div class="w-full pt-4 border-t-4 border-white flex flex-col items-start gap-4">
-                            <span class="text-3xl font-black text-[#111827] tracking-tighter">Rp35K</span>
-                            <a href="#" class="w-full text-center py-3 rounded bg-white text-[#2563EB] font-black tracking-widest uppercase border-4 border-white group-hover:border-[#2563EB] transition-all">Beli</a>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Product Card 2 -->
-                <div class="bg-[#F3F4F6] p-4 rounded-2xl flex flex-col group cursor-pointer hover:bg-[#E5E7EB] transition-colors border-4 border-transparent hover:border-[#2563EB]">
-                    <div class="w-full aspect-[4/3] rounded-xl bg-gray-300 overflow-hidden relative mb-6 border-4 border-transparent group-hover:border-[#111827] transition-all">
-                        <img src="https://images.unsplash.com/photo-1621370830740-4598d41fe041?q=80&w=600&auto=format&fit=crop"
-                            alt="Madu Hutan Asli" class="w-full h-full object-cover">
-                    </div>
-                    <div class="px-2 flex flex-col flex-grow">
-                        <div class="text-xs text-[#2563EB] font-black mb-2 uppercase tracking-widest">Hasil Tani</div>
-                        <h3 class="text-2xl font-black text-[#111827] uppercase tracking-tighter mb-2 leading-tight">Madu Liar 500ml</h3>
-                        <p class="text-[#4B5563] font-medium text-sm leading-relaxed mb-6 flex-grow">Ekstraksi lebah hutan murni untuk stabilitas fisik.</p>
-                        
-                        <div class="w-full pt-4 border-t-4 border-white flex flex-col items-start gap-4">
-                            <span class="text-3xl font-black text-[#111827] tracking-tighter">Rp120K</span>
-                            <a href="#" class="w-full text-center py-3 rounded bg-[#2563EB] text-white font-black tracking-widest uppercase border-4 border-transparent hover:bg-white hover:text-[#2563EB] hover:border-[#2563EB] transition-all">Beli Utama</a>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Product Card 3 -->
-                <div class="bg-[#F3F4F6] p-4 rounded-2xl flex flex-col group cursor-pointer hover:bg-[#E5E7EB] transition-colors border-4 border-transparent hover:border-[#F59E0B]">
-                     <div class="w-full aspect-[4/3] rounded-xl bg-gray-300 overflow-hidden relative mb-6 border-4 border-transparent group-hover:border-[#111827] transition-all">
-                        <img src="https://images.unsplash.com/photo-1516054817101-9dcbe768ef60?q=80&w=600&auto=format&fit=crop"
-                            alt="Kerajinan Bambu" class="w-full h-full object-cover">
-                        <div class="absolute top-3 right-3 bg-[#2563EB] text-white px-3 py-1 font-bold text-xs uppercase tracking-wider rounded">Baru</div>
-                    </div>
-                    <div class="px-2 flex flex-col flex-grow">
-                        <div class="text-xs text-[#F59E0B] font-black mb-2 uppercase tracking-widest">Kerajinan</div>
-                        <h3 class="text-2xl font-black text-[#111827] uppercase tracking-tighter mb-2 leading-tight">Lampu Bambu</h3>
-                        <p class="text-[#4B5563] font-medium text-sm leading-relaxed mb-6 flex-grow">Struktur dekorasi anyaman solid bambu.</p>
-                        
-                        <div class="w-full pt-4 border-t-4 border-white flex flex-col items-start gap-4">
-                            <div class="flex gap-2 items-center">
-                                <span class="text-xl font-bold text-gray-400 line-through tracking-tighter leading-none">Rp90K</span>
-                                <span class="text-3xl font-black text-[#111827] tracking-tighter leading-none text-[#F59E0B]">Rp75K</span>
+                        @if($item->stok > 0)
+                            <div class="absolute top-3 right-3 bg-[#10B981] text-white px-2.5 py-1 font-black text-[11px] uppercase tracking-wider rounded shadow-sm">
+                                Stok: {{ $item->stok }} {{ $item->satuan }}
                             </div>
-                            <a href="#" class="w-full text-center py-3 rounded bg-white text-[#F59E0B] font-black tracking-widest uppercase border-4 border-white group-hover:border-[#F59E0B] transition-all">Beli</a>
-                        </div>
-                    </div>
-                </div>
+                        @else
+                            <div class="absolute top-3 right-3 bg-[#EF4444] text-white px-2.5 py-1 font-black text-[11px] uppercase tracking-wider rounded shadow-sm">
+                                Habis
+                            </div>
+                        @endif
 
-                <!-- Product Card 4 -->
-                 <div class="bg-[#F3F4F6] p-4 rounded-2xl flex flex-col group cursor-pointer hover:bg-[#E5E7EB] transition-colors border-4 border-transparent hover:border-[#111827]">
-                    <div class="w-full aspect-[4/3] rounded-xl bg-gray-300 overflow-hidden relative mb-6 border-4 border-transparent group-hover:border-[#111827] transition-all">
-                        <img src="https://images.unsplash.com/photo-1604328698692-f76ea9498e76?q=80&w=600&auto=format&fit=crop"
-                            alt="Kopi Robusta" class="w-full h-full object-cover">
+                        @if($item->kategori)
+                            <div class="absolute bottom-3 left-3 bg-[#111827]/85 text-white px-2.5 py-1 font-black text-[10px] uppercase tracking-wider rounded">
+                                {{ $item->kategori->nama_kategori }}
+                            </div>
+                        @endif
                     </div>
+
+                    <!-- Content Card -->
                     <div class="px-2 flex flex-col flex-grow">
-                        <div class="text-xs text-[#111827] font-black mb-2 uppercase tracking-widest">Hasil Tani</div>
-                        <h3 class="text-2xl font-black text-[#111827] uppercase tracking-tighter mb-2 leading-tight">Kopi Robusta 250g</h3>
-                        <p class="text-[#4B5563] font-medium text-sm leading-relaxed mb-6 flex-grow">Ekstraksi bubuk gelap komoditas utama lereng utara.</p>
+                        <div class="text-[11px] text-[#2563EB] font-black mb-1 uppercase tracking-widest">
+                            {{ $item->kategori->nama_kategori ?? 'Umum' }}
+                        </div>
+                        <h3 class="text-xl font-black text-[#111827] uppercase tracking-tight mb-2 leading-tight group-hover:text-[#2563EB] transition-colors line-clamp-1">
+                            {{ $item->nama_produk }}
+                        </h3>
+                        <p class="text-[#4B5563] font-medium text-xs leading-relaxed mb-4 flex-grow line-clamp-2">
+                            {{ $item->deskripsi ?: 'Produk unggulan berkualitas hasil kemitraan BUMDes dan masyarakat desa.' }}
+                        </p>
                         
-                        <div class="w-full pt-4 border-t-4 border-white flex flex-col items-start gap-4">
-                            <span class="text-3xl font-black text-[#111827] tracking-tighter">Rp45K</span>
-                             <a href="#" class="w-full text-center py-3 rounded bg-[#111827] text-white font-black tracking-widest uppercase border-4 border-transparent hover:bg-white hover:text-[#111827] hover:border-[#111827] transition-all">Beli</a>
+                        <!-- Price & Order Action -->
+                        <div class="w-full pt-4 border-t-4 border-white flex flex-col gap-3 mt-auto">
+                            <div class="flex items-baseline justify-between">
+                                <span class="text-2xl font-black text-[#111827] tracking-tighter">
+                                    Rp {{ number_format($item->harga, 0, ',', '.') }}
+                                </span>
+                                <span class="text-xs text-slate-500 font-bold">/ {{ $item->satuan }}</span>
+                            </div>
+
+                            @if($item->stok > 0)
+                                <div class="grid grid-cols-2 gap-2">
+                                    <form action="{{ route('cart.add') }}" method="POST" class="w-full">
+                                        @csrf
+                                        <input type="hidden" name="id_produk" value="{{ $item->id_produk }}">
+                                        <input type="hidden" name="jumlah" value="1">
+                                        <button type="submit" class="w-full py-2.5 px-2 rounded bg-white text-[#2563EB] font-black tracking-wider uppercase text-[11px] border-4 border-white hover:border-[#2563EB] hover:bg-[#2563EB] hover:text-white transition-all flex items-center justify-center gap-1 shadow-sm" title="Tambahkan ke Keranjang">
+                                            <svg class="w-3.5 h-3.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+                                            <span>+Keranjang</span>
+                                        </button>
+                                    </form>
+                                    <form action="{{ route('cart.add') }}" method="POST" class="w-full">
+                                        @csrf
+                                        <input type="hidden" name="id_produk" value="{{ $item->id_produk }}">
+                                        <input type="hidden" name="jumlah" value="1">
+                                        <input type="hidden" name="direct_checkout" value="1">
+                                        <button type="submit" class="w-full py-2.5 px-2 rounded bg-[#F59E0B] text-[#111827] font-black tracking-wider uppercase text-[11px] border-4 border-[#111827] hover:bg-[#111827] hover:text-[#F59E0B] transition-all flex items-center justify-center gap-1 shadow-sm">
+                                            <span>Beli</span>
+                                            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+                                        </button>
+                                    </form>
+                                </div>
+                            @else
+                                <button disabled class="w-full py-2.5 rounded bg-gray-200 text-gray-400 font-black uppercase text-xs tracking-wider cursor-not-allowed border-2 border-gray-300">
+                                    Stok Habis
+                                </button>
+                            @endif
                         </div>
                     </div>
                 </div>
-
-                <!-- Product Card 5 -->
-                 <div class="bg-[#F3F4F6] p-4 rounded-2xl flex flex-col group cursor-pointer hover:bg-[#E5E7EB] transition-colors border-4 border-transparent hover:border-[#2563EB]">
-                    <div class="w-full aspect-[4/3] rounded-xl bg-gray-300 overflow-hidden relative mb-6 border-4 border-transparent group-hover:border-[#111827] transition-all">
-                        <img src="https://images.unsplash.com/photo-1582285513953-b035a6435c2b?q=80&w=600&auto=format&fit=crop"
-                            alt="Keripik Pisang" class="w-full h-full object-cover">
-                    </div>
-                    <div class="px-2 flex flex-col flex-grow">
-                        <div class="text-xs text-[#2563EB] font-black mb-2 uppercase tracking-widest">Kuliner Lokal</div>
-                        <h3 class="text-2xl font-black text-[#111827] uppercase tracking-tighter mb-2 leading-tight">Keripik Pisang 1Kg</h3>
-                        <p class="text-[#4B5563] font-medium text-sm leading-relaxed mb-6 flex-grow">Cemilan olahan karbohidrat padat distribusi partai.</p>
-                        
-                        <div class="w-full pt-4 border-t-4 border-white flex flex-col items-start gap-4">
-                            <span class="text-3xl font-black text-[#111827] tracking-tighter">Rp40K</span>
-                            <a href="#" class="w-full text-center py-3 rounded bg-white text-[#2563EB] font-black tracking-widest uppercase border-4 border-white group-hover:border-[#2563EB] transition-all">Beli</a>
-                        </div>
-                    </div>
+                @empty
+                <div class="col-span-1 sm:col-span-2 lg:col-span-3 xl:col-span-4 py-16 text-center bg-[#F3F4F6] rounded-2xl border-4 border-dashed border-[#CBD5E1]">
+                    <svg class="w-14 h-14 text-slate-400 mx-auto mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/>
+                    </svg>
+                    <h3 class="text-xl font-black text-[#111827] uppercase tracking-tight">Tidak Ada Produk Ditemukan</h3>
+                    <p class="text-slate-500 text-sm mt-1 max-w-md mx-auto">
+                        @if($search)
+                            Tidak ada produk yang cocok dengan kata kunci "{{ $search }}". Silakan coba kata kunci lain.
+                        @else
+                            Belum ada produk untuk kategori yang dipilih saat ini.
+                        @endif
+                    </p>
+                    <a href="{{ url('/katalog') }}" class="mt-4 inline-block px-6 py-2 rounded bg-[#111827] text-white font-black uppercase text-xs">
+                        Lihat Semua Komoditas
+                    </a>
                 </div>
-
-                 <!-- Product Card 6 -->
-                 <div class="bg-[#F3F4F6] p-4 rounded-2xl flex flex-col group cursor-pointer hover:bg-[#E5E7EB] transition-colors border-4 border-transparent hover:border-[#2563EB]">
-                    <div class="w-full aspect-[4/3] rounded-xl bg-gray-300 overflow-hidden relative mb-6 border-4 border-transparent group-hover:border-[#111827] transition-all">
-                        <img src="https://images.unsplash.com/photo-1628151015968-3cae74676104?q=80&w=600&auto=format&fit=crop"
-                            alt="Beras Desa" class="w-full h-full object-cover">
-                    </div>
-                    <div class="px-2 flex flex-col flex-grow">
-                        <div class="text-xs text-[#2563EB] font-black mb-2 uppercase tracking-widest">Hasil Tani</div>
-                        <h3 class="text-2xl font-black text-[#111827] uppercase tracking-tighter mb-2 leading-tight">Beras Wangi 5Kg</h3>
-                        <p class="text-[#4B5563] font-medium text-sm leading-relaxed mb-6 flex-grow">Logistik pokok utama panen kuartal murni.</p>
-                        
-                        <div class="w-full pt-4 border-t-4 border-white flex flex-col items-start gap-4">
-                            <span class="text-3xl font-black text-[#111827] tracking-tighter">Rp85K</span>
-                             <a href="#" class="w-full text-center py-3 rounded bg-white text-[#2563EB] font-black tracking-widest uppercase border-4 border-white group-hover:border-[#2563EB] transition-all">Beli</a>
-                        </div>
-                    </div>
-                </div>
-
+                @endforelse
             </div>
 
-            <!-- Flat Pagination -->
-            <div class="mt-20 flex justify-center">
-                <nav class="flex items-center gap-3" aria-label="Pagination">
-                    <button class="w-12 h-12 rounded flex items-center justify-center bg-white border-4 border-[#E5E7EB] text-[#4B5563] hover:border-[#111827] hover:text-[#111827] transition-all font-black">&lt;</button>
-                    <button class="w-12 h-12 rounded flex items-center justify-center bg-[#2563EB] border-4 border-[#2563EB] text-white font-black hover:bg-[#111827] hover:border-[#111827] transition-all">1</button>
-                    <button class="w-12 h-12 rounded flex items-center justify-center bg-white border-4 border-[#E5E7EB] text-[#111827] hover:border-[#111827] transition-all font-black">2</button>
-                    <button class="w-12 h-12 rounded flex items-center justify-center bg-white border-4 border-[#E5E7EB] text-[#111827] hover:border-[#111827] transition-all font-black">3</button>
-                    <span class="text-[#111827] font-black px-2">...</span>
-                    <button class="w-12 h-12 rounded flex items-center justify-center bg-white border-4 border-[#E5E7EB] text-[#111827] hover:border-[#111827] transition-all font-black">&gt;</button>
-                </nav>
-            </div>
         </div>
     </div>
 
     <!-- Call to Action (Flat Block Variant) -->
-    <div class="w-full bg-[#F59E0B] py-24 relative overflow-hidden z-0 border-b-4 border-black">
+    <div class="w-full bg-[#F59E0B] py-20 relative overflow-hidden z-0 border-b-4 border-black">
         <!-- Abstract Decoration -->
         <div class="absolute -top-1/2 left-1/4 w-96 h-96 bg-[#111827] rounded-full opacity-10 pointer-events-none"></div>
         <div class="absolute -bottom-1/4 right-1/4 w-72 h-72 border-8 border-black/10 rotate-45 pointer-events-none"></div>
 
         <div class="max-w-4xl mx-auto px-6 text-center relative z-10 flex flex-col items-center">
-            <h2 class="text-5xl lg:text-7xl font-black text-[#111827] mb-6 tracking-tighter uppercase leading-none">
-                Buka Posisi<br/><span class="text-white">Mitra Lapak</span>
+            <h2 class="text-4xl lg:text-6xl font-black text-[#111827] mb-4 tracking-tighter uppercase leading-none">
+                Buka Kemitraan<br/><span class="text-white">Lapak Komoditas</span>
             </h2>
-            <div class="w-24 h-2 bg-white mb-8"></div>
-            <p class="text-xl text-[#111827] font-bold mb-10 max-w-2xl mx-auto">
-                Lakukan pengajuan integrasi logistik. Kami mengontrol distribusi, Anda menumbuhkan hasil pengerjaan.
+            <div class="w-20 h-2 bg-white mb-6"></div>
+            <p class="text-lg text-[#111827] font-bold mb-8 max-w-2xl mx-auto">
+                Punya komoditas atau hasil kerajinan desa? Integrasikan produk Anda ke sistem BUMDesGO untuk pemasaran yang lebih luas.
             </p>
-            <div class="flex flex-col sm:flex-row gap-6 justify-center w-full sm:w-auto">
-                <button class="px-10 py-5 bg-[#111827] border-4 border-[#111827] text-white font-black uppercase tracking-widest rounded text-sm hover:scale-105 transition-transform">
-                    DAFTAR SEKARANG
-                </button>
-                <button class="px-10 py-5 bg-transparent border-4 border-[#111827] text-[#111827] font-black uppercase tracking-widest rounded text-sm hover:scale-105 hover:bg-white transition-transform">
-                    AKSES INFORMASI
-                </button>
+            <div class="flex flex-col sm:flex-row gap-4 justify-center w-full sm:w-auto">
+                <a href="{{ url('/kontak') }}" class="px-8 py-4 bg-[#111827] border-4 border-[#111827] text-white font-black uppercase tracking-wider rounded text-sm hover:scale-105 transition-transform">
+                    Hubungi Pengurus BUMDes
+                </a>
+                <a href="{{ url('/') }}" class="px-8 py-4 bg-transparent border-4 border-[#111827] text-[#111827] font-black uppercase tracking-wider rounded text-sm hover:scale-105 hover:bg-white transition-transform">
+                    Kembali ke Beranda
+                </a>
             </div>
         </div>
     </div>
