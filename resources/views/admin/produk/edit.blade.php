@@ -55,8 +55,11 @@
                 <label for="harga" class="block text-xs font-bold text-[#1C1917] uppercase tracking-wider mb-1.5">
                     Harga (Rp) <span class="text-red-500">*</span>
                 </label>
-                <input type="number" name="harga" id="harga" value="{{ old('harga', $produk->harga) }}" min="0"
-                    class="w-full px-4 py-2.5 border border-[#D6D3D1] rounded-[8px] focus:outline-none focus:border-[#C2410C] focus:ring-1 focus:ring-[#C2410C] transition-colors bg-[#FAFAF9] text-[#1C1917] text-sm" required>
+                <div class="relative">
+                    <span class="absolute left-3 top-2.5 text-sm font-bold text-[#78716C]">Rp</span>
+                    <input type="text" name="harga" id="harga" value="{{ old('harga', number_format($produk->harga, 0, ',', '.')) }}" placeholder="50.000"
+                        class="rupiah-input format-rupiah w-full pl-10 pr-3 py-2.5 border border-[#D6D3D1] rounded-[8px] focus:outline-none focus:border-[#C2410C] focus:ring-1 focus:ring-[#C2410C] transition-colors bg-[#FAFAF9] text-[#1C1917] text-sm font-semibold" required>
+                </div>
             </div>
 
             <div class="sm:col-span-1">

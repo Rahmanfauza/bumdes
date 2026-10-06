@@ -228,6 +228,22 @@
             <!-- Page Content -->
             <main class="flex-1 overflow-y-auto p-6 md:p-8 relative">
                 <div class="relative z-10 w-full max-w-[1200px] mx-auto">
+                    @if(session('error') || $errors->has('error'))
+                        <div class="mb-5 p-4 bg-red-50 border-l-4 border-red-500 rounded-r-lg shadow-xs flex items-center justify-between">
+                            <div class="flex items-center gap-3">
+                                <svg class="w-5 h-5 text-red-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                <span class="text-red-800 text-sm font-semibold">{{ session('error') ?: $errors->first('error') }}</span>
+                            </div>
+                        </div>
+                    @endif
+                    @if(session('success'))
+                        <div class="mb-5 p-4 bg-green-50 border-l-4 border-green-500 rounded-r-lg shadow-xs flex items-center justify-between">
+                            <div class="flex items-center gap-3">
+                                <svg class="w-5 h-5 text-green-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                                <span class="text-green-800 text-sm font-semibold">{{ session('success') }}</span>
+                            </div>
+                        </div>
+                    @endif
                     @yield('content')
                 </div>
             </main>
@@ -245,7 +261,7 @@
             }
 
             document.body.addEventListener('input', function(e) {
-                if (e.target && e.target.classList.contains('format-rupiah')) {
+                if (e.target && (e.target.classList.contains('format-rupiah') || e.target.classList.contains('rupiah-input'))) {
                     let cursorPosition = e.target.selectionStart;
                     let originalLength = e.target.value.length;
                     
@@ -263,10 +279,17 @@
 
             document.body.addEventListener('submit', function(e) {
                 if (e.target && e.target.tagName === 'FORM') {
-                    let inputs = e.target.querySelectorAll('.format-rupiah');
+                    let inputs = e.target.querySelectorAll('.format-rupiah, .rupiah-input');
                     inputs.forEach(input => {
                         input.value = input.value.replace(/\./g, '');
                     });
+                }
+            });
+
+            // Format nilai awal saat load
+            document.querySelectorAll('.format-rupiah, .rupiah-input').forEach(function(input) {
+                if (input.value) {
+                    input.value = formatNumber(input.value);
                 }
             });
         });

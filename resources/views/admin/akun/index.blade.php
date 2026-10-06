@@ -56,7 +56,11 @@
                             </span>
                         </td>
                         <td class="px-6 py-4">
-                            @if($user->status == 'aktif')
+                            @if($user->id_role == 4 || strtolower(optional($user->role)->nama_role) === 'direktur')
+                                <span class="px-2.5 py-1 rounded-full bg-green-100 text-green-800 text-xs font-bold flex inline-flex items-center gap-1 w-max border border-green-200">
+                                    <span class="w-1.5 h-1.5 bg-green-600 rounded-full"></span> Aktif (Permanen)
+                                </span>
+                            @elseif($user->status == 'aktif')
                                 <span class="px-2.5 py-1 rounded-full bg-green-100 text-green-700 text-xs font-bold flex inline-flex items-center gap-1 w-max">
                                     <span class="w-1.5 h-1.5 bg-green-500 rounded-full"></span> Aktif
                                 </span>
@@ -70,7 +74,7 @@
                             <a href="{{ route('admin.akun.edit', $user->id) }}" class="inline-block text-[#C2410C] hover:text-[#9A3412] font-semibold text-xs border border-[#C2410C] px-3 py-1.5 rounded-lg transition-colors">
                                 Edit
                             </a>
-                            @if(Session::get('admin_id') != $user->id)
+                            @if(Session::get('admin_id') != $user->id && $user->id_role != 4 && strtolower(optional($user->role)->nama_role) !== 'direktur')
                             <form action="{{ route('admin.akun.destroy', $user->id) }}" method="POST" class="inline-block" onsubmit="return confirm('Apakah Anda yakin ingin menghapus akun ini?');">
                                 @csrf
                                 @method('DELETE')

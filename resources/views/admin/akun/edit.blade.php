@@ -54,27 +54,51 @@
                     </div>
                 </div>
 
+                @php
+                    $isDirektur = ($user->id_role == 4 || strtolower(optional($user->role)->nama_role) === 'direktur');
+                @endphp
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
                     <!-- Otoritas / Role -->
                     <div>
                         <label class="block text-sm font-bold text-[#1C1917] mb-1">Otoritas (Role)</label>
-                        <select name="id_role" required class="w-full px-4 py-2 border border-[#D6D3D1] rounded-lg focus:outline-none focus:border-[#C2410C] focus:ring-1 focus:ring-[#C2410C] transition-colors bg-[#FAFAF9] focus:bg-white text-sm">
-                            <option value="">-- Pilih Otoritas Akses --</option>
-                            @foreach($roles as $role)
-                                <option value="{{ $role->id_role }}" {{ old('id_role', $user->id_role) == $role->id_role ? 'selected' : '' }}>
-                                    {{ $role->nama_role }}
-                                </option>
-                            @endforeach
-                        </select>
+                        @if($isDirektur)
+                            <input type="hidden" name="id_role" value="{{ $user->id_role }}">
+                            <div class="w-full px-4 py-2 border border-[#D6D3D1] rounded-lg bg-[#E7E5E4] text-[#1C1917] font-semibold text-sm flex items-center justify-between cursor-not-allowed">
+                                <span>{{ $user->role->nama_role ?? 'Direktur' }}</span>
+                                <span class="text-[11px] bg-[#1C1917] text-white px-2 py-0.5 rounded font-bold uppercase tracking-wider">Terkunci</span>
+                            </div>
+                            <p class="text-xs text-[#78716C] mt-1">Otoritas pimpinan tertinggi tidak dapat dialihkan ke peran staf.</p>
+                        @else
+                            <select name="id_role" required class="w-full px-4 py-2 border border-[#D6D3D1] rounded-lg focus:outline-none focus:border-[#C2410C] focus:ring-1 focus:ring-[#C2410C] transition-colors bg-[#FAFAF9] focus:bg-white text-sm">
+                                <option value="">-- Pilih Otoritas Akses --</option>
+                                @foreach($roles as $role)
+                                    <option value="{{ $role->id_role }}" {{ old('id_role', $user->id_role) == $role->id_role ? 'selected' : '' }}>
+                                        {{ $role->nama_role }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        @endif
                     </div>
 
                     <!-- Status Akun -->
                     <div>
                         <label class="block text-sm font-bold text-[#1C1917] mb-1">Status Akun</label>
-                        <select name="status" required class="w-full px-4 py-2 border border-[#D6D3D1] rounded-lg focus:outline-none focus:border-[#C2410C] focus:ring-1 focus:ring-[#C2410C] transition-colors bg-[#FAFAF9] focus:bg-white text-sm">
-                            <option value="aktif" {{ old('status', $user->status) == 'aktif' ? 'selected' : '' }}>Aktif (Dapat Login)</option>
-                            <option value="nonaktif" {{ old('status', $user->status) == 'nonaktif' ? 'selected' : '' }}>Nonaktif (Akses Ditutup)</option>
-                        </select>
+                        @if($isDirektur)
+                            <input type="hidden" name="status" value="aktif">
+                            <div class="w-full px-4 py-2 border border-green-200 bg-green-50 rounded-lg flex items-center justify-between text-sm">
+                                <span class="flex items-center gap-2 font-bold text-green-800">
+                                    <span class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
+                                    Aktif (Permanen)
+                                </span>
+                                <span class="text-xs bg-green-200 text-green-900 px-2 py-0.5 rounded font-semibold">Pucuk Pimpinan</span>
+                            </div>
+                            <p class="text-xs text-[#78716C] mt-1">Status akun Direktur selalu aktif demi kelangsungan operasional sistem.</p>
+                        @else
+                            <select name="status" required class="w-full px-4 py-2 border border-[#D6D3D1] rounded-lg focus:outline-none focus:border-[#C2410C] focus:ring-1 focus:ring-[#C2410C] transition-colors bg-[#FAFAF9] focus:bg-white text-sm">
+                                <option value="aktif" {{ old('status', $user->status) == 'aktif' ? 'selected' : '' }}>Aktif (Dapat Login)</option>
+                                <option value="nonaktif" {{ old('status', $user->status) == 'nonaktif' ? 'selected' : '' }}>Nonaktif (Akses Ditutup)</option>
+                            </select>
+                        @endif
                     </div>
                 </div>
 

@@ -43,6 +43,7 @@ class AdminAuthController extends Controller
                 return back()->withErrors(['username' => 'Akun Anda sedang dinonaktifkan. Hubungi Direktur.']);
             }
 
+            $request->session()->regenerate();
             Session::put('admin_logged_in', true);
             Session::put('admin_id', $user->id);
             Session::put('admin_username', $user->username);
@@ -53,9 +54,11 @@ class AdminAuthController extends Controller
         return back()->withErrors(['username' => 'Username atau password salah.']);
     }
 
-    public function logout()
+    public function logout(Request $request)
     {
         Session::forget(['admin_logged_in', 'admin_id', 'admin_username', 'admin_role']);
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
         return redirect('/admin/login')->with('success', 'Berhasil logout.');
     }
 }

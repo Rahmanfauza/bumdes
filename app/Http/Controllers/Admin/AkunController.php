@@ -76,24 +76,39 @@ class AkunController extends Controller
         $this->checkAccess();
         $user = User::findOrFail($id);
 
-        $request->validate([
+        $isDirektur = ($user->id_role == 4 || optional($user->role)->nama_role === 'Direktur');
+
+        $rules = [
             'name' => 'required|string|max:255',
             'username' => 'required|string|max:255|unique:users,username,'.$id,
             'email' => 'required|string|email|max:255|unique:users,email,'.$id,
-            'id_role' => 'required|exists:roles,id_role',
             'no_hp' => 'nullable|string|max:20',
-            'status' => 'required|in:aktif,nonaktif',
             'password' => 'nullable|string|min:6|confirmed',
-        ]);
+        ];
+
+        // Status dan peran staf biasa tetap divalidasi, sedangkan Direktur dikunci
+        if (!$isDirektur) {
+            $rules['id_role'] = 'required|exists:roles,id_role';
+            $rules['status'] = 'required|in:aktif,nonaktif';
+        }
+
+        $request->validate($rules);
 
         $data = [
             'name' => $request->name,
             'username' => $request->username,
             'email' => $request->email,
             'no_hp' => $request->no_hp,
-            'id_role' => $request->id_role,
-            'status' => $request->status,
         ];
+
+        if ($isDirektur) {
+            // Akun Direktur selalu dipaksa aktif dan perannya terkunci sebagai Direktur (4)
+            $data['id_role'] = 4;
+            $data['status'] = 'aktif';
+        } else {
+            $data['id_role'] = $request->id_role;
+            $data['status'] = $request->status;
+        }
 
         if ($request->filled('password')) {
             $data['password'] = Hash::make($request->password);
@@ -109,9 +124,9 @@ class AkunController extends Controller
         $this->checkAccess();
         $user = User::findOrFail($id);
         
-        // Mencegah direktur menghapus dirinya sendiri
-        if (Session::get('admin_id') == $user->id) {
-            return redirect()->route('admin.akun.index')->withErrors(['error' => 'Anda tidak dapat menghapus akun Anda sendiri.']);
+        // Mencegah penghapusan akun Direktur atau akun yang sedang login
+        if ($user->id_role == 4 || Session::get('admin_id') == $user->id) {
+            return redirect()->route('admin.akun.index')->withErrors(['error' => 'Akun Direktur tidak dapat dihapus demi kelangsungan operasional sistem.']);
         }
         
         $user->delete();

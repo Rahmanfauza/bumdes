@@ -87,23 +87,79 @@
                 </select>
             </div>
 
-            <div class="mb-4">
+            <div class="mb-3">
                 <label class="block text-xs font-semibold text-[#57534E] mb-1">Metode Bayar</label>
-                <select name="metode_bayar" class="w-full px-3 py-2 border border-[#D6D3D1] rounded-[6px] text-sm focus:outline-none focus:border-[#C2410C] bg-white">
+                <select name="metode_bayar" x-model="metodeBayar" class="w-full px-3 py-2 border border-[#D6D3D1] rounded-[6px] text-sm focus:outline-none focus:border-[#C2410C] bg-white">
                     <option value="tunai">Tunai / Cash</option>
                     <option value="transfer">Transfer Bank</option>
                     <option value="qris">QRIS</option>
                 </select>
             </div>
 
-            <div class="flex justify-between items-center mb-4 text-[#1C1917]">
-                <span class="font-bold">Total Tagihan</span>
-                <span class="font-bold text-xl text-[#C2410C]" x-text="formatRupiah(totalCart)"></span>
+            <!-- Total Tagihan -->
+            <div class="p-3 bg-white border border-[#E7E5E4] rounded-lg mb-3 shadow-xs">
+                <div class="flex justify-between items-center text-[#1C1917]">
+                    <span class="text-xs uppercase font-bold text-[#78716C] tracking-wider">Total Tagihan</span>
+                    <span class="font-extrabold text-xl text-[#C2410C]" x-text="formatRupiah(totalCart)"></span>
+                </div>
+            </div>
+
+            <!-- Kalkulator Tunai Kasir (Otomatis Pemisah Ribuan & Hitung Kembalian) -->
+            <div x-show="metodeBayar === 'tunai'" class="space-y-3 mb-4 p-3 bg-[#F5F5F4] rounded-lg border border-[#D6D3D1]">
+                <div>
+                    <label class="block text-xs font-bold text-[#1C1917] mb-1">
+                        Uang Tunai Diterima (Rp)
+                    </label>
+                    <div class="relative">
+                        <span class="absolute left-3 top-2 text-sm font-bold text-[#78716C]">Rp</span>
+                        <input type="text" x-model="uangBayarDisplay" @input="handleUangBayarInput" placeholder="0"
+                            class="w-full pl-10 pr-3 py-2 border border-[#D6D3D1] rounded-lg text-sm font-bold bg-white text-[#1C1917] focus:outline-none focus:border-[#C2410C] focus:ring-1 focus:ring-[#C2410C]">
+                    </div>
+                </div>
+
+                <!-- Tombol Cepat Pecahan Uang -->
+                <div class="flex flex-wrap gap-1.5">
+                    <button type="button" @click="setUangPas()" class="px-2 py-1 bg-white hover:bg-[#C2410C] hover:text-white border border-[#D6D3D1] rounded text-[11px] font-bold text-[#57534E] transition-colors">
+                        Uang Pas
+                    </button>
+                    <button type="button" @click="addUang(10000)" class="px-2 py-1 bg-white hover:bg-[#C2410C] hover:text-white border border-[#D6D3D1] rounded text-[11px] font-semibold text-[#57534E] transition-colors">
+                        +10.000
+                    </button>
+                    <button type="button" @click="addUang(20000)" class="px-2 py-1 bg-white hover:bg-[#C2410C] hover:text-white border border-[#D6D3D1] rounded text-[11px] font-semibold text-[#57534E] transition-colors">
+                        +20.000
+                    </button>
+                    <button type="button" @click="addUang(50000)" class="px-2 py-1 bg-white hover:bg-[#C2410C] hover:text-white border border-[#D6D3D1] rounded text-[11px] font-semibold text-[#57534E] transition-colors">
+                        +50.000
+                    </button>
+                    <button type="button" @click="addUang(100000)" class="px-2 py-1 bg-white hover:bg-[#C2410C] hover:text-white border border-[#D6D3D1] rounded text-[11px] font-semibold text-[#57534E] transition-colors">
+                        +100.000
+                    </button>
+                </div>
+
+                <!-- Hasil Perhitungan Kembalian -->
+                <div class="pt-2 border-t border-[#E7E5E4] flex justify-between items-center text-xs">
+                    <span class="font-bold text-[#57534E]">Perhitungan Kembalian:</span>
+                    <template x-if="uangBayar >= totalCart">
+                        <span class="font-bold text-sm text-[#16A34A]" x-text="formatRupiah(uangBayar - totalCart)"></span>
+                    </template>
+                    <template x-if="uangBayar > 0 && uangBayar < totalCart">
+                        <span class="font-bold text-xs text-[#DC2626]" x-text="'Kurang ' + formatRupiah(totalCart - uangBayar)"></span>
+                    </template>
+                    <template x-if="uangBayar === 0">
+                        <span class="text-[#A8A29E] font-medium">-</span>
+                    </template>
+                </div>
+            </div>
+
+            <!-- Non-tunai info -->
+            <div x-show="metodeBayar !== 'tunai'" class="p-3 bg-blue-50 border border-blue-200 rounded-lg mb-4 text-xs text-blue-800">
+                <span class="font-bold">Pembayaran Non-Tunai:</span>
+                <p class="mt-0.5 text-blue-600">Pelanggan membayar sesuai total tagihan via transfer bank atau QRIS.</p>
             </div>
 
             <div id="hidden-inputs"></div>
             
-            <button type="submit" :disabled="cart.length === 0"
+            <button type="submit" :disabled="cart.length === 0 || (metodeBayar === 'tunai' && uangBayar > 0 && uangBayar < totalCart)"
                 class="w-full bg-[#C2410C] hover:bg-[#9A3412] disabled:bg-[#D6D3D1] disabled:cursor-not-allowed text-white py-3 rounded-[8px] font-bold text-sm tracking-wide transition-colors">
                 PROSES PEMBAYARAN
             </button>
@@ -115,7 +171,7 @@
 <script>
 function posApp() {
     return {
-        produks: @json($produks->map(function($p) {
+        produks: {!! json_encode($produks->map(function($p) {
             return [
                 'id' => $p->id_produk,
                 'nama' => $p->nama_produk,
@@ -123,9 +179,12 @@ function posApp() {
                 'stok' => $p->stok,
                 'satuan' => $p->satuan
             ];
-        })),
+        })) !!},
         searchQuery: '',
         cart: [],
+        metodeBayar: 'tunai',
+        uangBayar: 0,
+        uangBayarDisplay: '',
         
         get filteredProduks() {
             if (this.searchQuery === '') {
@@ -167,13 +226,35 @@ function posApp() {
         },
 
         formatRupiah(angka) {
-            return 'Rp ' + new Intl.NumberFormat('id-ID').format(angka);
+            return 'Rp ' + new Intl.NumberFormat('id-ID').format(Math.max(0, angka || 0));
+        },
+
+        handleUangBayarInput(e) {
+            let clean = e.target.value.replace(/\D/g, '');
+            this.uangBayar = clean ? parseInt(clean, 10) : 0;
+            this.uangBayarDisplay = clean ? new Intl.NumberFormat('id-ID').format(this.uangBayar) : '';
+        },
+
+        setUangPas() {
+            this.uangBayar = this.totalCart;
+            this.uangBayarDisplay = this.totalCart > 0 ? new Intl.NumberFormat('id-ID').format(this.totalCart) : '';
+        },
+
+        addUang(nominal) {
+            this.uangBayar += nominal;
+            this.uangBayarDisplay = new Intl.NumberFormat('id-ID').format(this.uangBayar);
         },
 
         prepareForm(e) {
             if (this.cart.length === 0) {
                 e.preventDefault();
                 alert('Keranjang masih kosong!');
+                return;
+            }
+
+            if (this.metodeBayar === 'tunai' && this.uangBayar > 0 && this.uangBayar < this.totalCart) {
+                e.preventDefault();
+                alert('Nominal uang tunai kurang dari total tagihan!');
                 return;
             }
             

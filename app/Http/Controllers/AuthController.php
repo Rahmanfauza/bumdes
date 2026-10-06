@@ -26,6 +26,9 @@ class AuthController extends Controller
 
         // Cek kecocokan data dengan database
         if ($pelanggan && Hash::check($password, $pelanggan->password)) {
+            // Regenerasi sesi untuk mencegah session fixation
+            $request->session()->regenerate();
+
             // Set session login sukses
             Session::put('pelanggan_logged_in', true);
             Session::put('pelanggan_id', $pelanggan->id_pelanggan);
@@ -46,7 +49,7 @@ class AuthController extends Controller
             'email' => 'required|string|email|max:255|unique:pelanggans,email',
             'no_hp' => 'nullable|string|max:20',
             'alamat' => 'nullable|string',
-            'password' => 'required|string|min:4',
+            'password' => 'required|string|min:8',
         ]);
 
         $pelanggan = Pelanggan::create([
@@ -59,6 +62,7 @@ class AuthController extends Controller
         ]);
 
         // Auto login setelah sukses registrasi
+        $request->session()->regenerate();
         Session::put('pelanggan_logged_in', true);
         Session::put('pelanggan_id', $pelanggan->id_pelanggan);
         Session::put('pelanggan_nama', $pelanggan->nama);
@@ -67,9 +71,11 @@ class AuthController extends Controller
         return redirect()->back()->with('success', 'Pendaftaran akun berhasil! Selamat berbelanja di BUMDesGO.');
     }
 
-    public function logout()
+    public function logout(Request $request)
     {
         Session::forget(['pelanggan_logged_in', 'pelanggan_id', 'pelanggan_nama', 'pelanggan_email']);
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
         return redirect('/')->with('success', 'Anda telah berhasil keluar dari akun pembeli.');
     }
 }

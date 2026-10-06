@@ -154,7 +154,10 @@
             </div>
             <div>
                 <label class="block text-sm font-semibold text-[#1C1917] mb-1">Nominal (Rp)</label>
-                <input type="number" name="nominal" class="w-full px-4 py-2 border rounded-[8px]" required min="1">
+                <div class="relative">
+                    <span class="absolute left-3 top-2 text-sm font-bold text-[#78716C]">Rp</span>
+                    <input type="text" name="nominal" placeholder="100.000" class="rupiah-input format-rupiah w-full pl-10 pr-3 py-2 border rounded-[8px] font-semibold text-sm focus:outline-none focus:border-[#16A34A]" required>
+                </div>
             </div>
             <div>
                 <label class="block text-sm font-semibold text-[#1C1917] mb-1">Keterangan</label>
@@ -180,7 +183,10 @@
             </div>
             <div>
                 <label class="block text-sm font-semibold text-[#1C1917] mb-1">Nominal (Rp)</label>
-                <input type="number" name="nominal" class="w-full px-4 py-2 border rounded-[8px]" required min="1">
+                <div class="relative">
+                    <span class="absolute left-3 top-2 text-sm font-bold text-[#78716C]">Rp</span>
+                    <input type="text" name="nominal" placeholder="100.000" class="rupiah-input format-rupiah w-full pl-10 pr-3 py-2 border rounded-[8px] font-semibold text-sm focus:outline-none focus:border-[#DC2626]" required>
+                </div>
             </div>
             <div>
                 <label class="block text-sm font-semibold text-[#1C1917] mb-1">Keterangan</label>

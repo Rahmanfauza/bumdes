@@ -24,6 +24,10 @@ class ProdukController extends Controller
 
     public function store(Request $request)
     {
+        if ($request->has('harga')) {
+            $request->merge(['harga' => (float) preg_replace('/[^0-9]/', '', (string) $request->harga)]);
+        }
+
         $request->validate([
             'nama_produk' => 'required|string|max:255',
             'id_kategori' => 'required|exists:kategori_produks,id_kategori',
@@ -56,6 +60,10 @@ class ProdukController extends Controller
 
     public function update(Request $request, $id)
     {
+        if ($request->has('harga')) {
+            $request->merge(['harga' => (float) preg_replace('/[^0-9]/', '', (string) $request->harga)]);
+        }
+
         $request->validate([
             'nama_produk' => 'required|string|max:255',
             'id_kategori' => 'required|exists:kategori_produks,id_kategori',

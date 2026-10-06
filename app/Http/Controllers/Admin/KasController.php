@@ -24,6 +24,10 @@ class KasController extends Controller
 
     public function storePemasukan(Request $request)
     {
+        if ($request->has('nominal')) {
+            $request->merge(['nominal' => (float) preg_replace('/[^0-9]/', '', (string) $request->nominal)]);
+        }
+
         $request->validate([
             'tanggal' => 'required|date',
             'nominal' => 'required|numeric|min:1',
@@ -37,6 +41,10 @@ class KasController extends Controller
 
     public function storePengeluaran(Request $request)
     {
+        if ($request->has('nominal')) {
+            $request->merge(['nominal' => (float) preg_replace('/[^0-9]/', '', (string) $request->nominal)]);
+        }
+
         $request->validate([
             'tanggal' => 'required|date',
             'nominal' => 'required|numeric|min:1',
